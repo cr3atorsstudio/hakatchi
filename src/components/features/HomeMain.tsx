@@ -8,13 +8,13 @@ import { WalletConnectContainer } from "./WalletConnectContainer";
 export const HomeMain = () => {
   return (
     <VStack alignItems="center">
-      <VStack maxW="48rem" w="100%">
-        <Box>
+      <VStack maxW="48rem" w="100%" bgColor="#5C7E5E">
+        <VStack gap={0} w="100%">
           <GhostSummary />
           <GhostImage />
           <GhostAction />
           <GhostOverview />
-        </Box>
+        </VStack>
         <WalletConnectContainer />
       </VStack>
     </VStack>
