@@ -24,6 +24,7 @@ export interface CleaningLog {
   cleaned_at: string;
   effort_level: number; // 1-10
   onchain_impact: boolean;
+  onchain_tx_id?: string; // オプション: トランザクションID
 }
 
 export interface FeedingLog {
@@ -32,4 +33,5 @@ export interface FeedingLog {
   grave_id: string;
   fed_at: string;
   food_quality: number; // 1-10
-}
+  onchain_tx_id?: string; // オプション: トランザクションID
+} 
