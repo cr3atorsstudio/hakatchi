@@ -1,3 +1,5 @@
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 export const WalletConnectContainer = () => {
-  return <div>WalletConnectContainer</div>;
+  return <ConnectButton />;
 };

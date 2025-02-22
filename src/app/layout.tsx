@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { DotGothic16 } from "next/font/google";
 import "./globals.css";
-import { Provider } from "@/components/ui/provider";
+import { ChakraUiProvider } from "@/components/app/ChakraUiProvider";
 import { HomeContainer } from "@/components/features/HomeContainer";
+import { PrivyProvider } from "@/components/app/PrivyProvider";
+import { WalletProviders } from "@/components/app/WalletProviders";
 
 const dotGothic16 = DotGothic16({
   subsets: ["latin"],
@@ -11,7 +13,7 @@ const dotGothic16 = DotGothic16({
 
 export const metadata: Metadata = {
   title: "Hakatchi",
-  description: "this is gameFi created by creator's studio",
+  description: "this is GameFi created by creator's studio",
 };
 
 export default function RootLayout({
@@ -22,9 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${dotGothic16.className}`}>
-        <Provider>
-          <HomeContainer>{children}</HomeContainer>
-        </Provider>
+        <ChakraUiProvider>
+          <WalletProviders>
+            {/* <PrivyProvider> */}
+            <HomeContainer>{children}</HomeContainer>
+            {/* </ PrivyProvider> */}
+          </WalletProviders>
+        </ChakraUiProvider>
       </body>
     </html>
   );
