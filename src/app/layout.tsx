@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DotGothic16 } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { HomeContainer } from "@/components/features/HomeContainer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dotGothic16 = DotGothic16({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${dotGothic16.className}`}>
         <Provider>
           <HomeContainer>{children}</HomeContainer>
         </Provider>

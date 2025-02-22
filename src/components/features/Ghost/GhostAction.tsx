@@ -1,16 +1,101 @@
-import { HStack, Button, VStack } from "@chakra-ui/react";
+import { HStack, Button, VStack, Image } from "@chakra-ui/react";
 
 export const GhostAction = () => {
   return (
-    <VStack mt={4}>
-      <HStack>
-        <Button>FEED</Button>
-        <Button>CLEAN</Button>
-        <Button>ITEM</Button>
+    <VStack w="100%" mt={-4} gap="0.15rem">
+      <HStack w="100%" justifyContent="center" gap="0.25rem">
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          FEED
+        </Button>
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          CLEAN
+        </Button>
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          ITEM
+        </Button>
       </HStack>
-      <HStack>
-        <Button>PLAY</Button>
-        <Button>BLEED</Button>
+      <HStack w="100%" justifyContent="center" gap="0.25rem">
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          PLAY
+        </Button>
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          BREED
+        </Button>
+        <Button
+          color="#193459"
+          w="30%"
+          h="2.875rem"
+          maxW="7.5rem"
+          pb="0.75rem"
+          pl="0.3rem"
+          letterSpacing="0.3rem"
+          backgroundColor="transparent"
+          backgroundImage={"url(/button/button2.png)"}
+          backgroundSize="contain"
+          backgroundRepeat="no-repeat"
+        >
+          SHOP
+        </Button>
       </HStack>
     </VStack>
   );

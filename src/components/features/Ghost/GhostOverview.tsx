@@ -1,29 +1,83 @@
-import { Center, HStack, Text, Grid } from "@chakra-ui/react";
+import { Center, HStack, Text, Box } from "@chakra-ui/react";
 
-export const GhostOverview = () => {
+interface GhostOverviewProps {
+  energy: number;
+  cleanliness: number;
+  mood: number;
+}
+
+export const GhostOverview = ({
+  energy,
+  cleanliness,
+  mood,
+}: GhostOverviewProps) => {
+  const params = [
+    {
+      name: "Energy",
+      value: energy,
+      icon: {
+        blank: "♡",
+        full: "♥",
+      },
+    },
+    {
+      name: "Cleanliness",
+      value: cleanliness,
+      icon: {
+        blank: "☆",
+        full: "★",
+      },
+    },
+    {
+      name: "Mood",
+      value: mood,
+      icon: {
+        blank: "◇",
+        full: "◆",
+      },
+    },
+  ];
+
+  const getIcons = ({
+    value,
+    icon: { blank, full },
+  }: {
+    value: number;
+    icon: {
+      blank: string;
+      full: string;
+    };
+  }) => {
+    const max = 100;
+    const heartCount = Math.round((value / max) * 5);
+    return full.repeat(heartCount) + blank.repeat(5 - heartCount);
+  };
+
   return (
-    <Center bgColor="#FFFCEC" p={4} borderRadius="xl" mt={5}>
-      <Grid
+    <Center w="100%" p={8}>
+      <Box
+        w="100%"
+        bgColor="#FFFCEC"
+        borderRadius="xl"
+        p={4}
         gridTemplateColumns={"repeat(auto-fit, 9.25rem)"}
         gridTemplateRows="repeat(1)"
       >
-        {[
-          "Energy",
-          "Cleanliness",
-          "Mood",
-          "Affection",
-          "Satiety",
-          "Stress",
-        ].map((item, index) => {
+        {params.map((item, index) => {
           return (
-            <HStack>
-              <Text>{item}</Text>
-              <Text>.....</Text>
-              <Text>{(index + 1) * 100}</Text>
+            <HStack key={index}>
+              <Text>{item.name}</Text>
+              <Box flex={1} borderTop="1px dotted #352B2B"></Box>
+              <Text>
+                {getIcons({
+                  value: item.value,
+                  icon: item.icon,
+                })}
+              </Text>
             </HStack>
           );
         })}
-      </Grid>
+      </Box>
     </Center>
   );
 };
