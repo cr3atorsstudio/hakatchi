@@ -3,8 +3,9 @@ import { DotGothic16 } from "next/font/google";
 import "./globals.css";
 import { ChakraUiProvider } from "@/components/app/ChakraUiProvider";
 import { HomeContainer } from "@/components/features/HomeContainer";
-import { PrivyProvider } from "@/components/app/PrivyProvider";
-import { WalletProviders } from "@/components/app/WalletProviders";
+import { ReactNode } from "react";
+import ContextProvider from "@/context";
+import { headers } from "next/headers";
 
 const dotGothic16 = DotGothic16({
   subsets: ["latin"],
@@ -19,17 +20,17 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
+  const cookies = headers().get("cookie");
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${dotGothic16.className}`}>
         <ChakraUiProvider>
-          <WalletProviders>
-            {/* <PrivyProvider> */}
+          <ContextProvider cookies={cookies}>
             <HomeContainer>{children}</HomeContainer>
-            {/* </ PrivyProvider> */}
-          </WalletProviders>
+          </ContextProvider>
         </ChakraUiProvider>
       </body>
     </html>
