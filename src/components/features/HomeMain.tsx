@@ -9,9 +9,12 @@ import { WalletConnectContainer } from "./WalletConnectContainer";
 import { Header } from "../assets/Header";
 import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
 import { useState } from "react";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const HomeMain = () => {
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
+  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
+    useAppKitAccount();
 
   const hakatch_info: HakatchInfo = {
     hakaType: "romanian",
@@ -38,18 +41,24 @@ export const HomeMain = () => {
       >
         <Header />
         <VStack gap={0} w="100%">
-          <GhostSummary age={hakatch_info.age} name={hakatch_info.name} />
+          {address && (
+            <GhostSummary age={hakatch_info.age} name={hakatch_info.name} />
+          )}
           <GhostImage
             hakaType={hakatch_info.hakaType}
             action={charaAction}
             ghostType={hakatch_info.ghostType}
           />
-          <GhostAction />
-          <GhostOverview
-            energy={hakatch_info.state.energy}
-            cleanliness={hakatch_info.state.cleanliness}
-            mood={hakatch_info.state.mood}
-          />
+          {address && (
+            <>
+              <GhostAction />
+              <GhostOverview
+                energy={hakatch_info.state.energy}
+                cleanliness={hakatch_info.state.cleanliness}
+                mood={hakatch_info.state.mood}
+              />
+            </>
+          )}
         </VStack>
         <WalletConnectContainer />
       </VStack>
