@@ -19,7 +19,7 @@ const INITIAL_HAKATCH_INFO: HakatchInfo = {
   age: 0,
   state: {
     energy: 100,
-    cleanliness: 90,
+    cleanliness: 100,
     mood: 50,
   },
 };
