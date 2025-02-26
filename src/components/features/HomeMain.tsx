@@ -35,40 +35,54 @@ export const HomeMain = () => {
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { isAuthenticated, walletAddress } = useAuth();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!isAuthenticated || !walletAddress) {
-        setLoading(false);
-        return;
-      }
+  const fetchUserData = async () => {
+    if (!isAuthenticated || !walletAddress) {
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const response = await fetch("/api/users/me", {
-          headers: {
-            "wallet-address": walletAddress,
-          },
-        });
+    try {
+      const response = await fetch("/api/users/me", {
+        headers: {
+          "wallet-address": walletAddress,
+        },
+      });
 
-        if (response.ok) {
-          const userData = await response.json();
-          // Set first to true if user has no graves
-          setFirst(userData.graves.length === 0);
+      if (response.ok) {
+        const userData = await response.json();
+        // Set first to true if user has no graves
+        setFirst(userData.graves.length === 0);
 
-          // If user has graves, load the first grave's data
-          if (userData.graves.length > 0) {
-            const grave = userData.graves[0]; // Get the first grave
-            setHakatchInfo(convertGraveToHakatchInfo(grave));
-          }
+        // If user has graves, load the first grave's data
+        if (userData.graves.length > 0) {
+          const grave = userData.graves[0]; // Get the first grave
+          setHakatchInfo(convertGraveToHakatchInfo(grave));
         }
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchUserData();
-  }, [isAuthenticated, walletAddress]);
+  }, [isAuthenticated, walletAddress, first]);
+
+  // Create a custom FirstStep component that will refresh data after completion
+  const CustomFirstStep = () => (
+    <FirstStep
+      setHakatchInfo={setHakatchInfo}
+      setFirst={(value) => {
+        setFirst(value);
+        // If FirstStep is completed (value is false), refresh the data
+        if (value === false) {
+          fetchUserData();
+        }
+      }}
+    />
+  );
 
   return (
     <VStack h="100vh" alignItems="center">
@@ -106,9 +120,7 @@ export const HomeMain = () => {
           )}
         </VStack>
         <WalletConnectContainer />
-        {isAuthenticated && first && (
-          <FirstStep setHakatchInfo={setHakatchInfo} setFirst={setFirst} />
-        )}
+        {isAuthenticated && first && <CustomFirstStep />}
       </VStack>
     </VStack>
   );
