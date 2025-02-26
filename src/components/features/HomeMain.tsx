@@ -13,13 +13,13 @@ import { FirstStep } from "./FirstStep";
 import { useAuth } from "@/app/hooks/useAuth";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
-  hakaType: "romanian",
-  ghostType: "blue",
+  hakaType: "japanese",
+  ghostType: "purple",
   name: null,
   age: 0,
   state: {
     energy: 100,
-    cleanliness: 50,
+    cleanliness: 90,
     mood: 50,
   },
 };
@@ -54,6 +54,7 @@ export const HomeMain = () => {
             hakaType={hakatchInfo.hakaType}
             action={charaAction}
             ghostType={hakatchInfo.ghostType}
+            cleanliness={hakatchInfo.state.cleanliness}
             setCharaAction={setCharaAction}
           />
           {isAuthenticated && (

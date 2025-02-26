@@ -7,12 +7,14 @@ interface GhostImageProps {
   ghostType: GhostType;
   action: GhostAction;
   setCharaAction: Dispatch<SetStateAction<GhostAction>>;
+  cleanliness: number;
 }
 
 export const GhostImage = ({
   hakaType,
   ghostType,
   action,
+  cleanliness,
   setCharaAction,
 }: GhostImageProps) => {
   useEffect(() => {
@@ -40,11 +42,31 @@ export const GhostImage = ({
           break;
       }
     }
+    if (action === "clean") {
+      setTimeout(() => {
+        setCharaAction("default");
+      }, 2000);
+    }
   }, [action]);
 
   return (
     <Container>
-      <Flex w="100%" alignItems="center" flexDir="column">
+      <Flex
+        position={"relative"}
+        w="100%"
+        alignItems="center"
+        flexDir="column"
+        _after={{
+          content: '""',
+          display: "block",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: `rgba(0,0,0,${(100 - cleanliness) / 100})`,
+        }}
+      >
         <Image
           position="relative"
           w="100%"
@@ -77,6 +99,9 @@ export const GhostImage = ({
           src={"/hakatch/" + ghostType + "/" + action + ".gif"}
           alt=""
         />
+        {action === "clean" && (
+          <Image position="absolute" w="100%" src={"/heya/clean.png"} alt="" />
+        )}
       </Flex>
     </Container>
   );

@@ -18,21 +18,33 @@ export const WalletConnectContainer = () => {
   });
 
   return (
-    <Flex align="center" gap={4} bg="white">
+    <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
       {authenticated ? (
-        <HStack h={6}>
+        <HStack
+          h={6}
+          justifyContent={"space-between"}
+          bg="white"
+          w={"100%"}
+          px={10}
+        >
           <Text fontSize="sm">
             {user?.email?.address ||
               user?.wallet?.address.slice(0, 6) +
                 "..." +
                 user?.wallet?.address.slice(-5, -1)}
           </Text>
-          <Button colorScheme="brand" size="sm" onClick={logout}>
+          <Text
+            color={"#5C7E5E"}
+            colorScheme="brand"
+            textDecoration={"underline"}
+            cursor={"pointer"}
+            onClick={logout}
+          >
             Logout
-          </Button>
+          </Text>
         </HStack>
       ) : (
-        <Button colorScheme="brand" size="lg" onClick={login}>
+        <Button px={4} colorScheme="brand" size="lg" onClick={login}>
           Connect Wallet
         </Button>
       )}

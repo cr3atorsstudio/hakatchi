@@ -21,7 +21,7 @@ export const GhostActionUnderConstructionButton = ({
 }: GhostActionUnderConstructionButtonProps) => {
   return (
     <>
-      <DialogRoot>
+      <DialogRoot size={"xs"}>
         <DialogTrigger asChild>
           <Button
             color="#193459"
@@ -39,23 +39,43 @@ export const GhostActionUnderConstructionButton = ({
             {label}
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent p={4} color={"#000"}>
           <DialogHeader>
-            <DialogTitle>Oops!</DialogTitle>
+            <DialogTitle
+              color="#325634"
+              fontWeight={"normal"}
+              textAlign={"center"}
+            >
+              Oops!
+            </DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <DialogBody p={2}>
             <Text>
               This area is under construction.
               <br />
               You'll be able to play with your ghost soon!
             </Text>
           </DialogBody>
-          <DialogFooter>
+          <DialogFooter display={"flex"} justifyContent={"center"}>
             <DialogActionTrigger asChild>
-              <Button>OK</Button>
+              <Button
+                type="button"
+                color="#fff"
+                w="30%"
+                h="3.8rem"
+                pb="0.75rem"
+                pl="0.3rem"
+                letterSpacing="0.3rem"
+                backgroundColor="transparent"
+                backgroundImage={"url(/button/button1.png)"}
+                backgroundSize="contain"
+                backgroundRepeat="no-repeat"
+                backgroundPosition={"center"}
+              >
+                OK
+              </Button>
             </DialogActionTrigger>
           </DialogFooter>
-          <DialogCloseTrigger />
         </DialogContent>
       </DialogRoot>
     </>

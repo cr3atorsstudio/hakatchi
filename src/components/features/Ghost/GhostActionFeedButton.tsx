@@ -46,7 +46,11 @@ export const GhostActionFeedButton = ({
         </DialogTrigger>
         <DialogContent color={"#000"}>
           <DialogHeader p="4">
-            <DialogTitle fontWeight={"normal"} textAlign={"center"}>
+            <DialogTitle
+              color="#325634"
+              fontWeight={"normal"}
+              textAlign={"center"}
+            >
               Select an offering
             </DialogTitle>
           </DialogHeader>
