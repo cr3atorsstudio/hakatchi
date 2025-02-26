@@ -257,11 +257,6 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
             backgroundRepeat="no-repeat"
             backgroundPosition={"center"}
             onClick={() => {
-              setHakatchInfo((v) => ({
-                ...v,
-                hakaType: target,
-                ghostType: ghost,
-              }));
               setStep(4);
             }}
           >
@@ -319,6 +314,7 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
                 hakaType: target,
                 ghostType: ghost,
               }));
+              //TODO: ↑ この情報を保存する
               setFirst(false);
             }}
           >

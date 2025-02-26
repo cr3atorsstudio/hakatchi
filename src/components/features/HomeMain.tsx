@@ -8,7 +8,7 @@ import { GhostOverview } from "./Ghost/GhostOverview";
 import { WalletConnectContainer } from "./WalletConnectContainer";
 import { Header } from "../assets/Header";
 import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { FirstStep } from "./FirstStep";
 
@@ -28,7 +28,8 @@ export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
     useState<HakatchInfo>(INITIAL_HAKATCH_INFO);
 
-  const [first, setFirst] = useState(true);
+  const [first, setFirst] = useState(true); // TODO: Fetch from server
+
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
     useAppKitAccount();
