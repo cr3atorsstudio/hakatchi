@@ -6,17 +6,25 @@ export const WalletConnectContainer = () => {
   const { ready, logout, authenticated } = usePrivy();
   const { user } = useUser();
   const { login } = useLogin({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
-      fetch("api/users/me", {
-        method: "GET",
-        body: JSON.stringify({ wallet_address: user.wallet?.address || "" }),
-      });
-      // Any logic you'd like to execute if the user is/becomes authenticated while this
-      // component is mounted
+    onComplete: async ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
+      try {
+        const response = await fetch("/api/users/me", {
+          method: "GET",
+          headers: {
+            "wallet-address": user.wallet?.address || "",
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const userData = await response.json();
+        console.log('User data:', userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     },
     onError: (error) => {
-      console.log(error);
-      // Any logic you'd like to execute after a user exits the login flow or there is an error
+      console.error('Login error:', error);
     },
   });
 
