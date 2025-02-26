@@ -11,24 +11,25 @@ import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
 import { useState } from "react";
 import { FirstStep } from "./FirstStep";
 import { useAuth } from "@/app/hooks/useAuth";
+import { useIsSignUpUser } from "@/app/hooks/useIsSignUpUser";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
-  hakaType: "japanese",
-  ghostType: "purple",
+  hakaType: "romanian",
+  ghostType: "blue",
   name: null,
   age: 0,
   state: {
     energy: 100,
-    cleanliness: 100,
+    cleanliness: 50,
     mood: 50,
   },
 };
 
-export const HomeMain = () => {
+export const HomeMain = async () => {
   const [hakatchInfo, setHakatchInfo] =
     useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
 
-  const [first, setFirst] = useState(true); // TODO: Fetch from server
+  const isSetupUser = await useIsSignUpUser();
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { isAuthenticated } = useAuth();
@@ -69,9 +70,7 @@ export const HomeMain = () => {
           )}
         </VStack>
         <WalletConnectContainer />
-        {isAuthenticated && first && (
-          <FirstStep setHakatchInfo={setHakatchInfo} setFirst={setFirst} />
-        )}
+        {!isSetupUser && <FirstStep setHakatchInfo={setHakatchInfo} />}
       </VStack>
     </VStack>
   );

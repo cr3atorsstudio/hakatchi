@@ -14,18 +14,26 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import Spotlight from "./Intro/SpotLight";
 import { GhostType, HakatchInfo, HakaType } from "@/types/ghost";
+import { useAuth } from "@/app/hooks/useAuth";
 
 interface FirstStepProps {
   setHakatchInfo: Dispatch<SetStateAction<HakatchInfo>>;
-  setFirst: Dispatch<SetStateAction<boolean>>;
+  // setFirst: Dispatch<SetStateAction<boolean>>;
 }
 
-export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
+export const FirstStep = ({ setHakatchInfo }: FirstStepProps) => {
   const [step, setStep] = useState(0);
   const [target, setTarget] = useState<HakaType>("romanian");
+  const { walletAddress, isAuthenticated } = useAuth();
 
   const [isFollowing, setIsFollowing] = useState(true);
 
@@ -50,6 +58,23 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
     return ghostTypes[Math.floor(Math.random() * ghostTypes.length)];
   };
   const ghost = useMemo(() => getRandomGhostType(), []);
+
+  const onComfirmClick = useCallback(() => {
+    setHakatchInfo((v) => ({
+      ...v,
+      name: name,
+      hakaType: target,
+      ghostType: ghost,
+    }));
+    fetch("/api/graves", {
+      method: "POST",
+      headers: {
+        wallet_address: walletAddress || "",
+      },
+    });
+    //TODO: ↑ この情報を保存する
+    // setFirst(false);
+  }, [setHakatchInfo]);
 
   return (
     <Box
@@ -307,16 +332,7 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
             backgroundSize="contain"
             backgroundRepeat="no-repeat"
             backgroundPosition={"center"}
-            onClick={() => {
-              setHakatchInfo((v) => ({
-                ...v,
-                name: name,
-                hakaType: target,
-                ghostType: ghost,
-              }));
-              //TODO: ↑ この情報を保存する
-              setFirst(false);
-            }}
+            onClick={onComfirmClick}
           >
             OK
           </Button>
