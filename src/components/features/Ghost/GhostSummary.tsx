@@ -1,7 +1,7 @@
 import { Container, HStack, Text } from "@chakra-ui/react";
 
 interface GhostSummaryProps {
-  name: string;
+  name: string | null;
   age: number;
 }
 
