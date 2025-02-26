@@ -1,4 +1,4 @@
-import { useUser, usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useUser } from "@privy-io/react-auth";
 
 export const useAuth = () => {
   const { user } = useUser();

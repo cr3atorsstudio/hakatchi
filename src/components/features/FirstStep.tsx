@@ -1,3 +1,4 @@
+import { useGrave } from "@/app/contexts/GraveContext";
 import { useAuth } from "@/app/hooks/useAuth";
 import { GhostType, HakatchInfo, HakaType } from "@/types/ghost";
 import {
@@ -28,6 +29,7 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
   const [step, setStep] = useState(0);
   const [target, setTarget] = useState<HakaType>("romanian");
   const { walletAddress } = useAuth();
+  const { setGraveId } = useGrave();
 
   const [isFollowing, setIsFollowing] = useState(true);
 
@@ -333,6 +335,15 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
                 if (!response.ok) {
                   throw new Error("Failed to create grave");
                 }
+
+                // Get the created grave data
+                const graveData = await response.json();
+
+                // Set the grave ID in the context
+                if (graveData.id) {
+                  setGraveId(graveData.id);
+                }
+
                 // Close first step
                 setFirst(false);
               } catch (error) {

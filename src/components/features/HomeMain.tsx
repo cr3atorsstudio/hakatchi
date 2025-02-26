@@ -1,5 +1,6 @@
 "use client";
 
+import { useGrave } from "@/app/contexts/GraveContext";
 import { useAuth } from "@/app/hooks/useAuth";
 import { GhostAction as GhostActionType, HakatchInfo } from "@/types/ghost";
 import { convertGraveToHakatchInfo } from "@/utils/graveConverter";
@@ -34,6 +35,7 @@ export const HomeMain = () => {
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { isAuthenticated, walletAddress } = useAuth();
+  const { setUserId, setGraveId } = useGrave();
 
   const fetchUserData = async () => {
     if (!isAuthenticated || !walletAddress) {
@@ -50,12 +52,23 @@ export const HomeMain = () => {
 
       if (response.ok) {
         const userData = await response.json();
+        // Store user ID in context
+        if (userData.id) {
+          setUserId(userData.id);
+        }
+
         // Set first to true if user has no graves
         setFirst(userData.graves.length === 0);
 
         // If user has graves, load the first grave's data
         if (userData.graves.length > 0) {
           const grave = userData.graves[0]; // Get the first grave
+
+          // Store grave ID in context
+          if (grave.id) {
+            setGraveId(grave.id);
+          }
+
           setHakatchInfo(convertGraveToHakatchInfo(grave));
         }
       }
