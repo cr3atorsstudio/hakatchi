@@ -28,7 +28,7 @@ export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
     useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
 
-  const [first, setFirst] = useState(false); // TODO: Fetch from server
+  const [first, setFirst] = useState(true); // TODO: Fetch from server
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { isAuthenticated } = useAuth();
