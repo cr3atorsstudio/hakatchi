@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 
 import {
   DialogBody,
@@ -15,7 +15,7 @@ import { Radio, RadioGroup } from "@/components/ui/radio";
 export const GhostActionFeedButton = () => {
   return (
     <>
-      <DialogRoot>
+      <DialogRoot size={"xs"}>
         <DialogTrigger asChild>
           <Button
             color="#193459"
@@ -33,23 +33,55 @@ export const GhostActionFeedButton = () => {
             FEED
           </Button>
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Select an offering</DialogTitle>
+        <DialogContent color={"#000"}>
+          <DialogHeader p="4">
+            <DialogTitle fontWeight={"normal"} textAlign={"center"}>
+              Select an offering
+            </DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <RadioGroup>
-              <Radio value="apple">apple</Radio>
+            <RadioGroup
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              gap={2}
+              pb={4}
+            >
+              <Radio value="apple">
+                <Image src="/apple.png" width={"28px"} height={"28px"} />
+              </Radio>
               <Radio value="locked1" disabled>
-                locked key
+                <Image src="/lock.png" width={"32px"} height={"32px"} />
               </Radio>
               <Radio value="locked2" disabled>
-                locked key
+                <Image src="/lock.png" width={"32px"} height={"32px"} />
               </Radio>
             </RadioGroup>
           </DialogBody>
-          <DialogFooter>
-            <Button>OK</Button>
+          <DialogFooter
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            px={4}
+            pb={4}
+          >
+            <Button
+              type="button"
+              color="#fff"
+              w="30%"
+              h="3.8rem"
+              pb="0.75rem"
+              pl="0.3rem"
+              letterSpacing="0.3rem"
+              backgroundColor="transparent"
+              backgroundImage={"url(/button/button1.png)"}
+              backgroundSize="contain"
+              backgroundRepeat="no-repeat"
+              backgroundPosition={"center"}
+              onClick={() => console.log("feed")}
+            >
+              OK
+            </Button>
           </DialogFooter>
           <DialogCloseTrigger />
         </DialogContent>
