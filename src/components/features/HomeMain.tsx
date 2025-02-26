@@ -1,17 +1,19 @@
 "use client";
 
-import { VStack } from "@chakra-ui/react";
-import { GhostSummary } from "./Ghost/GhostSummary";
-import { GhostImage } from "./Ghost/GhostImage";
-import { GhostAction } from "./Ghost/GhostAction";
-import { GhostOverview } from "./Ghost/GhostOverview";
-import { WalletConnectContainer } from "./WalletConnectContainer";
-import { Header } from "../assets/Header";
-import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
-import { useState } from "react";
-import { FirstStep } from "./FirstStep";
+import { useGrave } from "@/app/contexts/GraveContext";
 import { useAuth } from "@/app/hooks/useAuth";
 import { useIsSignUpUser } from "@/app/hooks/useIsSignUpUser";
+import { GhostAction as GhostActionType, HakatchInfo } from "@/types/ghost";
+import { convertGraveToHakatchInfo } from "@/utils/graveConverter";
+import { VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Header } from "../assets/Header";
+import { FirstStep } from "./FirstStep";
+import { GhostAction } from "./Ghost/GhostAction";
+import { GhostImage } from "./Ghost/GhostImage";
+import { GhostOverview } from "./Ghost/GhostOverview";
+import { GhostSummary } from "./Ghost/GhostSummary";
+import { WalletConnectContainer } from "./WalletConnectContainer";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
   hakaType: "romanian",
@@ -27,12 +29,75 @@ const INITIAL_HAKATCH_INFO: HakatchInfo = {
 
 export const HomeMain = async () => {
   const [hakatchInfo, setHakatchInfo] =
-    useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
+    useState<HakatchInfo>(INITIAL_HAKATCH_INFO);
 
   const isSetupUser = await useIsSignUpUser();
+  const [first, setFirst] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+  const { setUserId, setGraveId } = useGrave();
+
+  const fetchUserData = async () => {
+    if (!isAuthenticated || !walletAddress) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/users/me", {
+        headers: {
+          "wallet-address": walletAddress,
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        // Store user ID in context
+        if (userData.id) {
+          setUserId(userData.id);
+        }
+
+        // Set first to true if user has no graves
+        setFirst(userData.graves.length === 0);
+
+        // If user has graves, load the first grave's data
+        if (userData.graves.length > 0) {
+          const grave = userData.graves[0]; // Get the first grave
+
+          // Store grave ID in context
+          if (grave.id) {
+            setGraveId(grave.id);
+          }
+
+          setHakatchInfo(convertGraveToHakatchInfo(grave));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [isAuthenticated, walletAddress, first]);
+
+  // Create a custom FirstStep component that will refresh data after completion
+  const CustomFirstStep = () => (
+    <FirstStep
+      setHakatchInfo={setHakatchInfo}
+      setFirst={(value) => {
+        setFirst(value);
+        // If FirstStep is completed (value is false), refresh the data
+        if (value === false) {
+          fetchUserData();
+        }
+      }}
+    />
+  );
 
   return (
     <VStack h="100vh" alignItems="center">
@@ -70,7 +135,8 @@ export const HomeMain = async () => {
           )}
         </VStack>
         <WalletConnectContainer />
-        {!isSetupUser && <FirstStep setHakatchInfo={setHakatchInfo} />}
+        {/* {!isSetupUser && <FirstStep setHakatchInfo={setHakatchInfo} />} */}
+        {isAuthenticated && first && <CustomFirstStep />}
       </VStack>
     </VStack>
   );

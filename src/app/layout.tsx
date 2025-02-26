@@ -1,10 +1,11 @@
+import { ChakraUiProvider } from "@/components/app/ChakraUiProvider";
+import { PrivyProvider } from "@/components/app/PrivyProvider";
+import { HomeContainer } from "@/components/features/HomeContainer";
 import type { Metadata } from "next";
 import { DotGothic16 } from "next/font/google";
-import "./globals.css";
-import { ChakraUiProvider } from "@/components/app/ChakraUiProvider";
-import { HomeContainer } from "@/components/features/HomeContainer";
 import { ReactNode } from "react";
-import { PrivyProvider } from "@/components/app/PrivyProvider";
+import { GraveProvider } from "./contexts/GraveContext";
+import "./globals.css";
 
 const dotGothic16 = DotGothic16({
   subsets: ["latin"],
@@ -26,7 +27,9 @@ export default function RootLayout({
       <body className={`${dotGothic16.className}`}>
         <ChakraUiProvider>
           <PrivyProvider>
-            <HomeContainer>{children}</HomeContainer>
+            <GraveProvider>
+              <HomeContainer>{children}</HomeContainer>
+            </GraveProvider>
           </PrivyProvider>
         </ChakraUiProvider>
       </body>

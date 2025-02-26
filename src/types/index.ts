@@ -14,7 +14,10 @@ export interface Grave {
   created_at: string;
   dirtiness: number; // 0-100 (0=綺麗, 100=非常に汚い)
   hunger: number; // 0-100 (0=満腹, 100=飢餓状態)
+  mood: number; // 0-100 (0=悲しい, 100=楽しい)
   last_updated: string;
+  ghost_type: string;
+  age: number;
 }
 
 export interface CleaningLog {
@@ -34,4 +37,4 @@ export interface FeedingLog {
   fed_at: string;
   food_quality: number; // 1-10
   onchain_tx_id?: string; // オプション: トランザクションID
-} 
+}

@@ -1,3 +1,6 @@
+import { useGrave } from "@/app/contexts/GraveContext";
+import { useAuth } from "@/app/hooks/useAuth";
+import { GhostType, HakatchInfo, HakaType } from "@/types/ghost";
 import {
   Box,
   Button,
@@ -22,18 +25,17 @@ import {
   useState,
 } from "react";
 import Spotlight from "./Intro/SpotLight";
-import { GhostType, HakatchInfo, HakaType } from "@/types/ghost";
-import { useAuth } from "@/app/hooks/useAuth";
 
 interface FirstStepProps {
   setHakatchInfo: Dispatch<SetStateAction<HakatchInfo>>;
-  // setFirst: Dispatch<SetStateAction<boolean>>;
+  setFirst: Dispatch<SetStateAction<boolean>>;
 }
 
-export const FirstStep = ({ setHakatchInfo }: FirstStepProps) => {
+export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
   const [step, setStep] = useState(0);
   const [target, setTarget] = useState<HakaType>("romanian");
   const { walletAddress, isAuthenticated } = useAuth();
+  const { setGraveId } = useGrave();
 
   const [isFollowing, setIsFollowing] = useState(true);
 
@@ -307,7 +309,7 @@ export const FirstStep = ({ setHakatchInfo }: FirstStepProps) => {
           <Text textAlign="center" color="white" py={4}>
             A ghost has appeared!
             <br />
-            It’s looking at you with curiosity. Give it a name and become
+            It's looking at you with curiosity. Give it a name and become
             friends!
           </Text>
           <Input
@@ -332,7 +334,46 @@ export const FirstStep = ({ setHakatchInfo }: FirstStepProps) => {
             backgroundSize="contain"
             backgroundRepeat="no-repeat"
             backgroundPosition={"center"}
-            onClick={onComfirmClick}
+            // onClick={onComfirmClick}
+            onClick={async () => {
+              try {
+                if (!walletAddress) {
+                  console.error("Wallet address not found");
+                  return;
+                }
+
+                // Create grave via API
+                const response = await fetch("/api/graves", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "wallet-address": walletAddress,
+                  },
+                  body: JSON.stringify({
+                    name: name,
+                    ghostType: ghost,
+                    hakaType: target,
+                  }),
+                });
+
+                if (!response.ok) {
+                  throw new Error("Failed to create grave");
+                }
+
+                // Get the created grave data
+                const graveData = await response.json();
+
+                // Set the grave ID in the context
+                if (graveData.id) {
+                  setGraveId(graveData.id);
+                }
+
+                // Close first step
+                setFirst(false);
+              } catch (error) {
+                console.error("Error creating grave:", error);
+              }
+            }}
           >
             OK
           </Button>

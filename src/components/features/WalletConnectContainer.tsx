@@ -1,24 +1,10 @@
+import { Button, Flex, HStack, Text } from "@chakra-ui/react";
 import { useLogin, usePrivy, useUser } from "@privy-io/react-auth";
-import { Button, Text, Flex, Center, VStack, HStack } from "@chakra-ui/react";
-import { useCallback } from "react";
 
 export const WalletConnectContainer = () => {
   const { ready, logout, authenticated } = usePrivy();
   const { user } = useUser();
-  const { login } = useLogin({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
-      fetch("api/users/me", {
-        method: "GET",
-        body: JSON.stringify({ wallet_address: user.wallet?.address || "" }),
-      });
-      // Any logic you'd like to execute if the user is/becomes authenticated while this
-      // component is mounted
-    },
-    onError: (error) => {
-      console.log(error);
-      // Any logic you'd like to execute after a user exits the login flow or there is an error
-    },
-  });
+  const { login } = useLogin();
 
   return (
     <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
