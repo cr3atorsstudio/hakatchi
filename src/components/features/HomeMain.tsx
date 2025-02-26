@@ -26,7 +26,7 @@ const INITIAL_HAKATCH_INFO: HakatchInfo = {
 
 export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
-    useState<HakatchInfo>(INITIAL_HAKATCH_INFO);
+    useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
 
   const [first, setFirst] = useState(true); // TODO: Fetch from server
 
