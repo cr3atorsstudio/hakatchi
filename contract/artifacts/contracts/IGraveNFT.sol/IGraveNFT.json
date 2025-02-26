@@ -1,0 +1,217 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IGraveNFT",
+  "sourceName": "contracts/IGraveNFT.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "GraveCleaned",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "GraveCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "GraveFed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "GravePlayed",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getGraveStatus",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint8",
+              "name": "energy",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cleanliness",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "mood",
+              "type": "uint8"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum IGraveNFT.Personality",
+                  "name": "personality",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "string",
+                  "name": "color",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "origin",
+                  "type": "string"
+                },
+                {
+                  "internalType": "enum IGraveNFT.GraveType",
+                  "name": "graveType",
+                  "type": "uint8"
+                }
+              ],
+              "internalType": "struct IGraveNFT.Traits",
+              "name": "traits",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct IGraveNFT.GraveStatus",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enum IGraveNFT.Personality",
+              "name": "personality",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "color",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "origin",
+              "type": "string"
+            },
+            {
+              "internalType": "enum IGraveNFT.GraveType",
+              "name": "graveType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct IGraveNFT.Traits",
+          "name": "traits",
+          "type": "tuple"
+        }
+      ],
+      "name": "mintGrave",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "energy",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "cleanliness",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "mood",
+          "type": "uint8"
+        }
+      ],
+      "name": "updateStatus",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,32 @@
+[cardinal]
+BASE_SHARD_ROUTER_KEY = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ01'
+BASE_SHARD_SEQUENCER_ADDRESS = 'localhost:9601'
+CARDINAL_LOG_LEVEL = 'info'
+CARDINAL_LOG_PRETTY = 'true'
+CARDINAL_NAMESPACE = 'defaultnamespace'
+CARDINAL_ROLLUP_ENABLED = 'false'
+REDIS_ADDRESS = 'localhost:6379'
+REDIS_PASSWORD = 'very_unsafe_password_replace_me'
+TELEMETRY_PROFILER_ENABLED = false
+TELEMETRY_TRACE_ENABLED = false
+
+[common]
+ROUTER_KEY = 'c7136336725030e026a07d10b56856b4ee7aada9f59a010907ae1baccb064790'
+
+[evm]
+CHAIN_ID = 'world-420'
+CHAIN_KEY_MNEMONIC = 'enact adjust liberty squirrel bulk ticket invest tissue antique window thank slam unknown fury script among bread social switch glide wool clog flag enroll'
+DA_AUTH_TOKEN = ''
+DA_BASE_URL = 'http://celestia-devnet'
+DA_NAMESPACE_ID = '67480c4a88c4d12935d4'
+FAUCET_ADDRESS = 'aa9288F88233Eb887d194fF2215Cf1776a6FEE41'
+FAUCET_AMOUNT = '0x56BC75E2D6310000'
+FAUCET_ENABLED = false
+
+[nakama]
+ENABLE_ALLOWLIST = 'false'
+NAKAMA_METRICS_ENABLED = true
+NAKAMA_METRICS_INTERVAL = 30
+NAKAMA_TRACE_ENABLED = true
+NAKAMA_TRACE_SAMPLE_RATE = 0.6
+OUTGOING_QUEUE_SIZE = 64
