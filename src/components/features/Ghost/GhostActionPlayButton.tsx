@@ -11,11 +11,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Radio, RadioGroup } from "@/components/ui/radio";
+import GhostGame from "./GhostGame";
 
-export const GhostActionItemButton = () => {
+export const GhostActionPlayButton = () => {
   return (
     <>
-      <DialogRoot>
+      <DialogRoot size={"lg"}>
         <DialogTrigger asChild>
           <Button
             color="#193459"
@@ -30,28 +31,13 @@ export const GhostActionItemButton = () => {
             backgroundSize="contain"
             backgroundRepeat="no-repeat"
           >
-            ITEM
+            PLAY
           </Button>
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Select item</DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            <RadioGroup>
-              <Radio value="apple">a</Radio>
-              <Radio value="locked1" disabled>
-                b
-              </Radio>
-              <Radio value="locked2" disabled>
-                c
-              </Radio>
-            </RadioGroup>
+        <DialogContent py={4}>
+          <DialogBody color={"#000"}>
+            <GhostGame />
           </DialogBody>
-          <DialogFooter>
-            <Button>OK</Button>
-          </DialogFooter>
-          <DialogCloseTrigger />
         </DialogContent>
       </DialogRoot>
     </>

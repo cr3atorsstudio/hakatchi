@@ -19,7 +19,7 @@ interface Obstacle {
   height: number;
 }
 
-export default function GamePage() {
+export default function GhostGame() {
   // ゲーム状態とスコア管理
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState(0);
@@ -151,7 +151,7 @@ export default function GamePage() {
       if (time - lastSpawnTimeRef.current >= nextSpawnIntervalRef.current) {
         const obs: Obstacle = {
           x: canvasWidth,
-          y: groundLevel - 29, 
+          y: groundLevel - 29,
           width: 29,
           height: 29,
         };
@@ -212,8 +212,7 @@ export default function GamePage() {
 
   return (
     <Box display={"flex"} justifyContent={"center"} width={"100%"}>
-      <Box>
-        <h1>Ghost Run!</h1>
+      <Box pt={4}>
         <Box
           position={"relative"}
           backgroundColor={"#c1c3c3"}
@@ -228,15 +227,21 @@ export default function GamePage() {
               transform={"translate(-50%, -50%)"}
             >
               {assetsLoaded ? (
-                <Button px={4} onClick={startGame}>Start Game</Button>
+                <Button px={4} onClick={startGame}>
+                  Start Game
+                </Button>
               ) : (
                 <p>Assets loading...</p>
               )}
             </Box>
           )}
-          <Text position={"absolute"} top={0} right={"4px"} color={"#000"}>Score: {score}</Text>
+          <Text position={"absolute"} top={0} right={"4px"} color={"#000"}>
+            Score: {score}
+          </Text>
         </Box>
-        <Text textAlign={"center"}>Press the space key to avoid obstacles!</Text>
+        <Text textAlign={"center"}>
+          Press the space key to avoid obstacles!
+        </Text>
       </Box>
     </Box>
   );
