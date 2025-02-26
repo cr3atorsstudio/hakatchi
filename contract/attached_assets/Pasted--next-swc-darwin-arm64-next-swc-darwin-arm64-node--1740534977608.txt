@@ -1,0 +1,254 @@
+## エラーメッセージの概要
+
+あなたが直面しているエラーは、`@next/swc-darwin-arm64` パッケージのバイナリファイル `next-swc.darwin-arm64.node` のコード署名が無効であることを示しています。このため、Next.js のビルドプロセス中にバイナリの読み込みに失敗しています。
+
+```
+⚠ Attempted to load @next/swc-darwin-arm64, but an error occurred: dlopen(/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node, 0x0001): tried: '/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node' (code signature invalid in <4C4C4485-5555-3144-A18F-4B8E2DC5E8E9> '/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node' (errno=85) sliceOffset=0x00000000, codeBlobOffset=0x078C82D0, codeBlobSize=0x000F19A8), '/System/Volumes/Preboot/Cryptexes/OS/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node' (no such file), '/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node' (code signature invalid in <4C4C4485-5555-3144-A18F-4B8E2DC5E8E9> '/Users/riho/ghq/github.com/rlho/hakatchi_api/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node' (errno=85) sliceOffset=0x00000000, codeBlobOffset=0x078C82D0, codeBlobSize=0x000F19A8)
+[Error: `turbo.createProject` is not supported by the wasm bindings.]
+```
+
+## 原因と考えられる問題
+
+1. **バイナリの破損または不整合**:
+   - インストール中にバイナリが正しくダウンロードまたはインストールされなかった可能性があります。
+
+2. **Node.js のバージョン不整合**:
+   - 使用している Node.js のバージョンが `@next/swc` と互換性がない可能性があります。
+
+3. **macOS のセキュリティ設定**:
+   - macOS の Gatekeeper により、未認証のバイナリの実行がブロックされている可能性があります。
+
+4. **Apple Silicon (M1/M2) の特有の問題**:
+   - ARM アーキテクチャ向けのバイナリが正しく機能していない可能性があります。
+
+## 解決策
+
+以下のステップを順に実行して、問題を解決してください。
+
+### 1. 依存関係の再インストール
+
+一部の依存関係が破損している可能性があるため、`node_modules` を削除して再インストールします。
+
+```bash
+# プロジェクトディレクトリに移動
+cd /Users/riho/ghq/github.com/rlho/hakatchi_api
+
+# node_modules フォルダとロックファイルを削除
+rm -rf node_modules
+rm package-lock.json   # npm を使用している場合
+rm yarn.lock           # Yarn を使用している場合
+
+# 依存関係を再インストール
+npm install            # npm を使用している場合
+# または
+yarn install           # Yarn を使用している場合
+```
+
+### 2. `@next/swc` の再インストール
+
+`@next/swc` パッケージを個別に再インストールします。
+
+```bash
+# npm を使用している場合
+npm uninstall @next/swc-darwin-arm64
+npm install @next/swc-darwin-arm64
+
+# Yarn を使用している場合
+yarn remove @next/swc-darwin-arm64
+yarn add @next/swc-darwin-arm64
+```
+
+### 3. Node.js のバージョン確認と更新
+
+Next.js などの最新バージョンでは、特定の Node.js のバージョンが必要です。推奨バージョンを確認し、必要に応じて更新してください。
+
+```bash
+# 現在の Node.js のバージョンを確認
+node -v
+
+# nvm を使用している場合、最新の安定版に更新
+nvm install node
+nvm use node
+```
+
+### 4. キャッシュのクリア
+
+npm または Yarn のキャッシュが問題を引き起こしている可能性があるため、キャッシュをクリアします。
+
+```bash
+# npm のキャッシュをクリア
+npm cache clean --force
+
+# Yarn のキャッシュをクリア
+yarn cache clean
+```
+
+### 5. パッケージの再ビルド
+
+特定のパッケージを再ビルドしてみます。
+
+```bash
+# npm を使用している場合
+npm rebuild @next/swc-darwin-arm64
+
+# Yarn を使用している場合
+yarn add @next/swc-darwin-arm64 --force
+```
+
+### 6. macOS のセキュリティ設定の確認
+
+macOS の Gatekeeper によって、不明な開発元のバイナリがブロックされている可能性があります。
+
+1. **システム環境設定を開く**:
+   - 「システム環境設定」 > 「セキュリティとプライバシー」 > 「一般」タブ
+
+2. **ブロックされたアプリケーションの許可**:
+   - `next-swc.darwin-arm64.node` がブロックされている場合は、「このまま開く」を選択して許可します。
+
+### 7. Rosetta のインストールと使用
+
+Apple Silicon（M1/M2）マシンを使用している場合、Rosetta 2 が必要になることがあります。
+
+```bash
+# Rosetta のインストール
+softwareupdate --install-rosetta --agree-to-license
+```
+
+その後、ターミナルアプリケーションを Rosetta モードで実行してみてください。
+
+1. **ターミナルアプリケーションを閉じる**
+2. **Finder で「アプリケーション」 > 「ユーティリティ」 > 「ターミナル」を右クリック**
+3. **「情報を見る」を選択**
+4. **「Rosetta を使用して開く」にチェックを入れる**
+5. **ターミナルを再起動して再試行**
+
+### 8. 代替のビルドツールの使用
+
+もし上記の方法で解決しない場合、次の代替手段を検討してください。
+
+- **Babel の使用**:
+  SWC の代わりに Babel を使用してみることで、一時的に問題を回避できます。ただし、ビルド速度が遅くなる可能性があります。
+
+  ```bash
+  npm install --save-dev @babel/core @babel/preset-env babel-loader
+  ```
+
+  Next.js の設定ファイル（`next.config.js`）を調整して Babel を使用するように設定します。
+
+### 9. 最新の Next.js に更新
+
+プロジェクトが古いバージョンの Next.js を使用している場合、最新バージョンにアップデートすることで問題が解決することがあります。
+
+```bash
+# npm を使用している場合
+npm install next@latest
+
+# Yarn を使用している場合
+yarn add next@latest
+```
+
+### 10. GitHub Issues やコミュニティの確認
+
+同様の問題が他の開発者によって報告されていないか、Next.js の [GitHub Issues](https://github.com/vercel/next.js/issues) を確認してください。解決策やワークアラウンドが共有されている可能性があります。
+
+## 具体的な実行手順
+
+以下に、上記の解決策を順に実行するための具体的な手順を示します。
+
+### 1. 依存関係の再インストール
+
+```bash
+cd /Users/riho/ghq/github.com/rlho/hakatchi_api
+rm -rf node_modules
+rm package-lock.json   # npm を使用している場合
+rm yarn.lock           # Yarn を使用している場合
+npm install            # npm を使用している場合
+# または
+yarn install           # Yarn を使用している場合
+```
+
+### 2. `@next/swc` の再インストール
+
+```bash
+# npm を使用している場合
+npm uninstall @next/swc-darwin-arm64
+npm install @next/swc-darwin-arm64
+
+# Yarn を使用している場合
+yarn remove @next/swc-darwin-arm64
+yarn add @next/swc-darwin-arm64
+```
+
+### 3. Node.js のバージョン確認と更新
+
+```bash
+node -v
+# 推奨バージョンがインストールされていない場合、nvm を使用して更新
+nvm install node
+nvm use node
+```
+
+### 4. キャッシュのクリア
+
+```bash
+# npm のキャッシュをクリア
+npm cache clean --force
+
+# Yarn のキャッシュをクリア
+yarn cache clean
+```
+
+### 5. パッケージの再ビルド
+
+```bash
+# npm を使用している場合
+npm rebuild @next/swc-darwin-arm64
+
+# Yarn を使用している場合
+yarn add @next/swc-darwin-arm64 --force
+```
+
+### 6. macOS のセキュリティ設定の確認
+
+1. 「システム環境設定」を開く
+2. 「セキュリティとプライバシー」 > 「一般」タブを選択
+3. `@next/swc` 関連のバイナリがブロックされている場合、「このまま開く」をクリックして許可
+
+### 7. Rosetta のインストールと使用
+
+```bash
+softwareupdate --install-rosetta --agree-to-license
+```
+
+その後、ターミナルを Rosetta モードで再起動して再試行します。
+
+### 8. Next.js の最新バージョンに更新
+
+```bash
+# npm を使用している場合
+npm install next@latest
+
+# Yarn を使用している場合
+yarn add next@latest
+```
+
+### 9. プロジェクトのビルドと実行
+
+依存関係の再インストールと設定の修正後、プロジェクトをビルドして実行します。
+
+```bash
+npm run dev   # または yarn dev
+```
+
+## まとめ
+
+`@next/swc-darwin-arm64` のバイナリに関連するコード署名エラーは、依存関係の不整合、Node.js のバージョン問題、macOS のセキュリティ設定などが原因で発生します。上記のステップを順に実行することで、問題を解決できる可能性が高いです。
+
+もしこれらの手順を試しても問題が解決しない場合、以下の情報を提供していただければ、さらに具体的なサポートが可能です。
+
+- `package.json` の内容（機密情報は除外）
+- 使用している Node.js のバージョン
+- 実行したコマンドとその出力
+- 追加のエラーメッセージやログ
+
+お手数ですが、必要な情報を提供してください。引き続きサポートいたします。
