@@ -4,8 +4,7 @@ import "./globals.css";
 import { ChakraUiProvider } from "@/components/app/ChakraUiProvider";
 import { HomeContainer } from "@/components/features/HomeContainer";
 import { ReactNode } from "react";
-import ContextProvider from "@/context";
-import { headers } from "next/headers";
+import { PrivyProvider } from "@/components/app/PrivyProvider";
 
 const dotGothic16 = DotGothic16({
   subsets: ["latin"],
@@ -22,15 +21,13 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const cookies = headers().get("cookie");
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${dotGothic16.className}`}>
         <ChakraUiProvider>
-          <ContextProvider cookies={cookies}>
+          <PrivyProvider>
             <HomeContainer>{children}</HomeContainer>
-          </ContextProvider>
+          </PrivyProvider>
         </ChakraUiProvider>
       </body>
     </html>

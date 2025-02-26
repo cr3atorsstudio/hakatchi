@@ -9,8 +9,8 @@ import { WalletConnectContainer } from "./WalletConnectContainer";
 import { Header } from "../assets/Header";
 import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
 import { useState } from "react";
-import { useAppKitAccount } from "@reown/appkit/react";
 import { FirstStep } from "./FirstStep";
+import { useAuth } from "@/app/hooks/useAuth";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
   hakaType: "romanian",
@@ -31,8 +31,7 @@ export const HomeMain = () => {
   const [first, setFirst] = useState(false); // TODO: Fetch from server
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
-  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
-    useAppKitAccount();
+  const { isAuthenticated } = useAuth();
 
   return (
     <VStack h="100vh" alignItems="center">
@@ -48,7 +47,7 @@ export const HomeMain = () => {
       >
         <Header />
         <VStack gap={0} w="100%">
-          {address && (
+          {isAuthenticated && (
             <GhostSummary age={hakatchInfo.age} name={hakatchInfo.name} />
           )}
           <GhostImage
@@ -57,7 +56,7 @@ export const HomeMain = () => {
             ghostType={hakatchInfo.ghostType}
             setCharaAction={setCharaAction}
           />
-          {address && (
+          {isAuthenticated && (
             <>
               <GhostAction setCharaAction={setCharaAction} />
               <GhostOverview
@@ -69,7 +68,7 @@ export const HomeMain = () => {
           )}
         </VStack>
         <WalletConnectContainer />
-        {isConnected && first && (
+        {isAuthenticated && first && (
           <FirstStep setHakatchInfo={setHakatchInfo} setFirst={setFirst} />
         )}
       </VStack>
