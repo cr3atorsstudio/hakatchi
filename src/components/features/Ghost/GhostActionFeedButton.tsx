@@ -1,5 +1,6 @@
 import { Button, DialogActionTrigger, Image } from "@chakra-ui/react";
 
+import { useGrave } from "@/app/contexts/GraveContext";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -11,12 +12,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Radio, RadioGroup } from "@/components/ui/radio";
-import { Dispatch, SetStateAction, useState } from "react";
 import { GhostAction } from "@/types/ghost";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface GhostActionFeedButtonProps {
   setCharaAction: Dispatch<SetStateAction<GhostAction>>;
 }
+
+// 食べ物の定義
+interface Food {
+  name: string;
+  food_quality: number;
+}
+
+// 食べ物のマッピング
+const FOODS: Record<string, Food> = {
+  apple: { name: "Apple", food_quality: 5 },
+  // 他の食べ物を追加できます
+};
 
 export const GhostActionFeedButton = ({
   setCharaAction,
@@ -24,6 +37,45 @@ export const GhostActionFeedButton = ({
   const [selectedValue, setSelectedValue] = useState<undefined | string>(
     undefined
   );
+  const { graveId, userId } = useGrave();
+
+  const handleFeed = async () => {
+    if (!selectedValue || !graveId) return;
+
+    const food = FOODS[selectedValue];
+    if (!food) return;
+
+    try {
+      console.log("Feeding with", food);
+      setCharaAction("eatingApple");
+
+      const response = await fetch("/api/feed", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          grave_id: graveId,
+          name: food.name,
+          food_quality: food.food_quality,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to feed");
+      }
+
+      const data = await response.json();
+      console.log("Feed response:", data);
+
+      // 選択をリセット
+      setSelectedValue(undefined);
+    } catch (error) {
+      console.error("Error feeding:", error);
+    }
+  };
+
   return (
     <>
       <DialogRoot size={"xs"}>
@@ -99,14 +151,7 @@ export const GhostActionFeedButton = ({
                   backgroundSize="contain"
                   backgroundRepeat="no-repeat"
                   backgroundPosition={"center"}
-                  onClick={() => {
-                    console.log("feed", selectedValue);
-                    setSelectedValue(undefined);
-                    if (selectedValue === "apple") {
-                      setCharaAction("eatingApple");
-                      // TODO: ここでapiを叩く
-                    }
-                  }}
+                  onClick={handleFeed}
                 >
                   OK
                 </Button>

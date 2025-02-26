@@ -58,6 +58,8 @@ export const HomeMain = () => {
         }
 
         // Set first to true if user has no graves
+        console.log("walletAddress:", walletAddress);
+        console.log("userData.graves.length:", userData.graves.length);
         setFirst(userData.graves.length === 0);
 
         // If user has graves, load the first grave's data

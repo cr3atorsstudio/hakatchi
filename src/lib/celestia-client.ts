@@ -60,6 +60,7 @@ export class CelestiaClient {
         },
         body: JSON.stringify(payload),
       });
+      console.log("response:", response);
 
       if (!response.ok) {
         throw new Error(`Failed to submit blob: ${await response.text()}`);
@@ -129,6 +130,26 @@ export class CelestiaClient {
 
     // Base64エンコード
     return Buffer.from(namespace).toString("base64");
+  }
+
+  async healthCheck() {
+    try {
+      const response = await fetch(`${this.nodeUrl}/status`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return {
+        status: response.status,
+        ok: response.ok,
+        data: response.status === 200 ? await response.json() : null,
+      };
+    } catch (error) {
+      console.error("Celestia health check failed:", error);
+      return { status: 500, ok: false, data: null };
+    }
   }
 }
 

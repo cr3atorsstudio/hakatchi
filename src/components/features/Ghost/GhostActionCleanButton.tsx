@@ -1,5 +1,6 @@
 import { Button, DialogActionTrigger } from "@chakra-ui/react";
 
+import { useGrave } from "@/app/contexts/GraveContext";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -10,8 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Dispatch, SetStateAction } from "react";
 import { GhostAction } from "@/types/ghost";
+import { Dispatch, SetStateAction } from "react";
 
 interface GhostActionCleanButtonProps {
   setCharaAction: Dispatch<SetStateAction<GhostAction>>;
@@ -20,6 +21,41 @@ interface GhostActionCleanButtonProps {
 export const GhostActionCleanButton = ({
   setCharaAction,
 }: GhostActionCleanButtonProps) => {
+  const { graveId } = useGrave();
+
+  const handleClean = async () => {
+    if (!graveId) {
+      console.error("Grave ID not found");
+      return;
+    }
+
+    try {
+      console.log("Cleaning grave");
+      setCharaAction("clean");
+
+      // APIを呼び出して墓を掃除する
+      const response = await fetch("/api/clean", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          grave_id: graveId,
+          effort_level: 5, // デフォルトの努力レベル
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to clean");
+      }
+
+      const data = await response.json();
+      console.log("Clean response:", data);
+    } catch (error) {
+      console.error("Error cleaning:", error);
+    }
+  };
+
   return (
     <>
       <DialogRoot size={"xs"}>
@@ -74,10 +110,7 @@ export const GhostActionCleanButton = ({
                 backgroundSize="contain"
                 backgroundRepeat="no-repeat"
                 backgroundPosition={"center"}
-                onClick={() => {
-                  setCharaAction("clean");
-                  // TODO: ここでapiを叩く
-                }}
+                onClick={handleClean}
               >
                 OK
               </Button>
