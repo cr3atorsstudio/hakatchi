@@ -20,6 +20,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
           height={"42px"}
           backgroundColor="rgba(138, 183, 185, 0.5)"
           borderRadius={"100%"}
+          cursor={"pointer"}
           _peerChecked={{
             border: "2px solid #5C7E5E"
           }}

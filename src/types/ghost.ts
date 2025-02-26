@@ -2,7 +2,7 @@ export type HakaType = "japanese" | "egyptian" | "romanian";
 
 export type GhostType = "white" | "purple" | "blue" | "green";
 
-export type GhostAction = "feedFreeFood" | "clean" | "default";
+export type GhostAction = "eatingApple" | "clean" | "default";
 
 export interface HakatchInfo {
   hakaType: HakaType;

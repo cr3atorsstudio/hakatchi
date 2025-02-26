@@ -14,7 +14,7 @@ import { FirstStep } from "./FirstStep";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
   hakaType: "romanian",
-  ghostType: "purple",
+  ghostType: "blue",
   name: null,
   age: 0,
   state: {
@@ -28,7 +28,7 @@ export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
     useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
 
-  const [first, setFirst] = useState(true); // TODO: Fetch from server
+  const [first, setFirst] = useState(false); // TODO: Fetch from server
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
   const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
@@ -55,10 +55,11 @@ export const HomeMain = () => {
             hakaType={hakatchInfo.hakaType}
             action={charaAction}
             ghostType={hakatchInfo.ghostType}
+            setCharaAction={setCharaAction}
           />
           {address && (
             <>
-              <GhostAction />
+              <GhostAction setCharaAction={setCharaAction} />
               <GhostOverview
                 energy={hakatchInfo.state.energy}
                 cleanliness={hakatchInfo.state.cleanliness}
@@ -71,7 +72,6 @@ export const HomeMain = () => {
         {isConnected && first && (
           <FirstStep setHakatchInfo={setHakatchInfo} setFirst={setFirst} />
         )}
-
       </VStack>
     </VStack>
   );
