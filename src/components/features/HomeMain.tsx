@@ -1,16 +1,17 @@
 "use client";
 
-import { VStack } from "@chakra-ui/react";
-import { GhostSummary } from "./Ghost/GhostSummary";
-import { GhostImage } from "./Ghost/GhostImage";
-import { GhostAction } from "./Ghost/GhostAction";
-import { GhostOverview } from "./Ghost/GhostOverview";
-import { WalletConnectContainer } from "./WalletConnectContainer";
-import { Header } from "../assets/Header";
-import { HakatchInfo, GhostAction as GhostActionType } from "@/types/ghost";
-import { useState } from "react";
-import { FirstStep } from "./FirstStep";
 import { useAuth } from "@/app/hooks/useAuth";
+import { GhostAction as GhostActionType, HakatchInfo } from "@/types/ghost";
+import { convertGraveToHakatchInfo } from "@/utils/graveConverter";
+import { VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Header } from "../assets/Header";
+import { FirstStep } from "./FirstStep";
+import { GhostAction } from "./Ghost/GhostAction";
+import { GhostImage } from "./Ghost/GhostImage";
+import { GhostOverview } from "./Ghost/GhostOverview";
+import { GhostSummary } from "./Ghost/GhostSummary";
+import { WalletConnectContainer } from "./WalletConnectContainer";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
   hakaType: "japanese",
@@ -26,12 +27,48 @@ const INITIAL_HAKATCH_INFO: HakatchInfo = {
 
 export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
-    useState<HakatchInfo>(INITIAL_HAKATCH_INFO); //TODO: Fetch from server
+    useState<HakatchInfo>(INITIAL_HAKATCH_INFO);
 
-  const [first, setFirst] = useState(true); // TODO: Fetch from server
+  const [first, setFirst] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [charaAction, setCharaAction] = useState<GhostActionType>("default");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!isAuthenticated || !walletAddress) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/users/me", {
+          headers: {
+            "wallet-address": walletAddress,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          // Set first to true if user has no graves
+          setFirst(userData.graves.length === 0);
+
+          // If user has graves, load the first grave's data
+          if (userData.graves.length > 0) {
+            const grave = userData.graves[0]; // Get the first grave
+            setHakatchInfo(convertGraveToHakatchInfo(grave));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [isAuthenticated, walletAddress]);
 
   return (
     <VStack h="100vh" alignItems="center">

@@ -1,32 +1,10 @@
+import { Button, Flex, HStack, Text } from "@chakra-ui/react";
 import { useLogin, usePrivy, useUser } from "@privy-io/react-auth";
-import { Button, Text, Flex, Center, VStack, HStack } from "@chakra-ui/react";
-import { useCallback } from "react";
 
 export const WalletConnectContainer = () => {
   const { ready, logout, authenticated } = usePrivy();
   const { user } = useUser();
-  const { login } = useLogin({
-    onComplete: async ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
-      try {
-        const response = await fetch("/api/users/me", {
-          method: "GET",
-          headers: {
-            "wallet-address": user.wallet?.address || "",
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        const userData = await response.json();
-        console.log('User data:', userData);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    },
-    onError: (error) => {
-      console.error('Login error:', error);
-    },
-  });
+  const { login } = useLogin();
 
   return (
     <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
