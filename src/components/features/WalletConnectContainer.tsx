@@ -7,7 +7,10 @@ export const WalletConnectContainer = () => {
   const { user } = useUser();
   const { login } = useLogin({
     onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod }) => {
-      console.log(user, isNewUser, wasAlreadyAuthenticated, loginMethod);
+      fetch("api/users/me", {
+        method: "GET",
+        body: JSON.stringify({ wallet_address: user.wallet?.address || "" }),
+      });
       // Any logic you'd like to execute if the user is/becomes authenticated while this
       // component is mounted
     },
