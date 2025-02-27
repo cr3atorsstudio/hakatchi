@@ -26,6 +26,11 @@ const nextConfig = {
     // ビルド時に特定のディレクトリを無視
     outputFileTracingIgnores: ["**/contract/**", "**/hakatchi_engine/**"],
   },
+  env: {
+    GRAVE_NFT_CONTRACT_ADDRESS: process.env.GRAVE_NFT_CONTRACT_ADDRESS,
+    PRIVATE_KEY: process.env.PRIVATE_KEY,
+    ARBITRUM_RPC_URL: process.env.ARBITRUM_RPC_URL,
+  },
 };
 
 module.exports = nextConfig;
