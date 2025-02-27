@@ -1,5 +1,9 @@
+import { NFTService } from "@/lib/nft-service";
 import { supabase } from "@/lib/supabaseClient";
 import { NextResponse } from "next/server";
+
+// Initialize NFT service
+const nftService = new NFTService();
 
 export async function POST(request: Request) {
   const walletAddress = request.headers.get("wallet-address");
@@ -34,6 +38,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Mint NFT before creating the grave record
+    let tokenId;
+    try {
+      tokenId = await nftService.mintGraveForUser(walletAddress);
+      console.log(`Successfully minted NFT with token ID: ${tokenId}`);
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      return NextResponse.json(
+        { error: "Failed to mint NFT" },
+        { status: 500 }
+      );
+    }
+
     // Create new grave
     const { data: grave, error: graveError } = await supabase
       .from("graves")
@@ -48,6 +65,7 @@ export async function POST(request: Request) {
           mood: 50,
           age: 0,
           last_updated: new Date().toISOString(),
+          token_id: tokenId,
         },
       ])
       .select()
