@@ -1,5 +1,4 @@
 import { supabase } from "@/lib/supabaseClient";
-import { Grave } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -37,7 +36,7 @@ export async function POST(request: Request) {
 
     // Create new grave
     const { data: grave, error: graveError } = await supabase
-      .from<Grave>("graves")
+      .from("graves")
       .insert([
         {
           user_id: user.id,

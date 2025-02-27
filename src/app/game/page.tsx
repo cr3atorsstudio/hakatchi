@@ -44,8 +44,8 @@ export default function GamePage() {
   const nextSpawnIntervalRef = useRef(0);
 
   // 画像オブジェクトの参照（ローカルアセットから読み込む）
-  const playerImageRef = useRef<HTMLImageElement>(new Image());
-  const obstacleImageRef = useRef<HTMLImageElement>(new Image());
+  const playerImageRef = useRef<HTMLImageElement | null>(null);
+  const obstacleImageRef = useRef<HTMLImageElement | null>(null);
 
   // コンポーネントマウント時に画像をロード
   useEffect(() => {
@@ -57,12 +57,18 @@ export default function GamePage() {
       }
     };
 
-    // public フォルダ内に配置した画像パスを指定してください
-    playerImageRef.current.src = "/player.png";
-    playerImageRef.current.onload = handleLoad;
+    // 画像オブジェクトを作成
+    playerImageRef.current = new window.Image() as HTMLImageElement | null;
+    obstacleImageRef.current = new window.Image() as HTMLImageElement | null;
 
-    obstacleImageRef.current.src = "/obstacle.png";
-    obstacleImageRef.current.onload = handleLoad;
+    // public フォルダ内に配置した画像パスを指定してください
+    if (playerImageRef.current && obstacleImageRef.current) {
+      playerImageRef.current.src = "/player.png";
+      playerImageRef.current.onload = handleLoad;
+
+      obstacleImageRef.current.src = "/obstacle.png";
+      obstacleImageRef.current.onload = handleLoad;
+    }
   }, []);
 
   // スペースキー押下時のジャンプ処理
@@ -139,19 +145,21 @@ export default function GamePage() {
       }
 
       // プレイヤーの描画
-      ctx.drawImage(
-        playerImageRef.current,
-        player.x,
-        player.y,
-        player.width,
-        player.height
-      );
+      if (playerImageRef.current) {
+        ctx.drawImage(
+          playerImageRef.current,
+          player.x,
+          player.y,
+          player.width,
+          player.height
+        );
+      }
 
       // 障害物の生成（一定時間ごとに右端に配置）
       if (time - lastSpawnTimeRef.current >= nextSpawnIntervalRef.current) {
         const obs: Obstacle = {
           x: canvasWidth,
-          y: groundLevel - 29, 
+          y: groundLevel - 29,
           width: 29,
           height: 29,
         };
@@ -166,13 +174,15 @@ export default function GamePage() {
       const obstacles = obstaclesRef.current;
       for (let i = 0; i < obstacles.length; i++) {
         obstacles[i].x -= obstacleSpeed;
-        ctx.drawImage(
-          obstacleImageRef.current,
-          obstacles[i].x,
-          obstacles[i].y,
-          obstacles[i].width,
-          obstacles[i].height
-        );
+        if (obstacleImageRef.current) {
+          ctx.drawImage(
+            obstacleImageRef.current,
+            obstacles[i].x,
+            obstacles[i].y,
+            obstacles[i].width,
+            obstacles[i].height
+          );
+        }
       }
       obstaclesRef.current = obstacles.filter((obs) => obs.x + obs.width > 0);
 
@@ -228,15 +238,21 @@ export default function GamePage() {
               transform={"translate(-50%, -50%)"}
             >
               {assetsLoaded ? (
-                <Button px={4} onClick={startGame}>Start Game</Button>
+                <Button px={4} onClick={startGame}>
+                  Start Game
+                </Button>
               ) : (
                 <p>Assets loading...</p>
               )}
             </Box>
           )}
-          <Text position={"absolute"} top={0} right={"4px"} color={"#000"}>Score: {score}</Text>
+          <Text position={"absolute"} top={0} right={"4px"} color={"#000"}>
+            Score: {score}
+          </Text>
         </Box>
-        <Text textAlign={"center"}>Press the space key to avoid obstacles!</Text>
+        <Text textAlign={"center"}>
+          Press the space key to avoid obstacles!
+        </Text>
       </Box>
     </Box>
   );
