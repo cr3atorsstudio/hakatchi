@@ -3,15 +3,14 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "./IGraveNFT.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./IGraveNFT.sol";
 
 contract GraveNFT is ERC721, Ownable, IGraveNFT {
-    using Counters for Counters.Counter;
     using Strings for uint256;
 
-    Counters.Counter private _tokenIds;
+    uint256 private _tokenIds;
     mapping(uint256 => GraveStatus) private _graves;
     mapping(uint256 => uint256[]) private _graveHeights; // Celestia の height を複数保持
     string private _baseTokenURI;
@@ -42,8 +41,8 @@ contract GraveNFT is ERC721, Ownable, IGraveNFT {
         Traits memory traits,
         uint256 height // Celestia の height を最初に設定
     ) external override returns (uint256) {
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
+        _tokenIds++;
+        uint256 newTokenId = _tokenIds;
 
         _safeMint(msg.sender, newTokenId);
         _graves[newTokenId] = GraveStatus({
