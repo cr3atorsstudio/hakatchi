@@ -1,16 +1,12 @@
+import { useGetGrave } from "@/hooks/useGetGrave";
 import { Center, HStack, Text, Box } from "@chakra-ui/react";
 
-interface GhostOverviewProps {
-  energy: number;
-  cleanliness: number;
-  mood: number;
-}
+export const GhostOverview = () => {
+  const { grave, error } = useGetGrave();
+  const energy: number = grave ? 100 - grave.hunger : 0;
+  const cleanliness = grave ? 100 - grave.dirtiness : 0;
+  const mood = grave ? 100 - grave.mood : 0;
 
-export const GhostOverview = ({
-  energy,
-  cleanliness,
-  mood,
-}: GhostOverviewProps) => {
   const params = [
     {
       name: "Energy",
