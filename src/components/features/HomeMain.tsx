@@ -2,7 +2,6 @@
 
 import { useGrave } from "@/app/contexts/GraveContext";
 import { useAuth } from "@/app/hooks/useAuth";
-import { useIsSignUpUser } from "@/app/hooks/useIsSignUpUser";
 import { GhostAction as GhostActionType, HakatchInfo } from "@/types/ghost";
 import { convertGraveToHakatchInfo } from "@/utils/graveConverter";
 import { VStack } from "@chakra-ui/react";
@@ -27,11 +26,10 @@ const INITIAL_HAKATCH_INFO: HakatchInfo = {
   },
 };
 
-export const HomeMain = async () => {
+export const HomeMain = () => {
   const [hakatchInfo, setHakatchInfo] =
     useState<HakatchInfo>(INITIAL_HAKATCH_INFO);
 
-  const isSetupUser = await useIsSignUpUser();
   const [first, setFirst] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -137,7 +135,6 @@ export const HomeMain = async () => {
           )}
         </VStack>
         <WalletConnectContainer />
-        {/* {!isSetupUser && <FirstStep setHakatchInfo={setHakatchInfo} />} */}
         {isAuthenticated && first && <CustomFirstStep />}
       </VStack>
     </VStack>

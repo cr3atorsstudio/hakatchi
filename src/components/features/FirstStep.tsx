@@ -17,13 +17,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import Spotlight from "./Intro/SpotLight";
 
 interface FirstStepProps {
@@ -60,23 +54,6 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
     return ghostTypes[Math.floor(Math.random() * ghostTypes.length)];
   };
   const ghost = useMemo(() => getRandomGhostType(), []);
-
-  const onComfirmClick = useCallback(() => {
-    setHakatchInfo((v) => ({
-      ...v,
-      name: name,
-      hakaType: target,
-      ghostType: ghost,
-    }));
-    fetch("/api/graves", {
-      method: "POST",
-      headers: {
-        wallet_address: walletAddress || "",
-      },
-    });
-    //TODO: ↑ この情報を保存する
-    // setFirst(false);
-  }, [setHakatchInfo]);
 
   return (
     <Box
@@ -333,8 +310,7 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
             backgroundImage={"url(/button/button1.png)"}
             backgroundSize="contain"
             backgroundRepeat="no-repeat"
-            backgroundPosition={"center"}
-            // onClick={onComfirmClick}
+            backgroundPosition="center"
             onClick={async () => {
               try {
                 if (!walletAddress) {
