@@ -31,7 +31,6 @@ export function useGetGrave() {
       }
 
       const data = await response.json();
-      console.log("Fetched grave data:", data);
 
       setGrave(data.graves[0] || "");
     } catch (error) {

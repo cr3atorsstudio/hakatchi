@@ -21,11 +21,10 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import Spotlight from "./Intro/SpotLight";
 
 interface FirstStepProps {
-  setHakatchInfo: Dispatch<SetStateAction<HakatchInfo>>;
   setFirst: Dispatch<SetStateAction<boolean>>;
 }
 
-export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
+export const FirstStep = ({ setFirst }: FirstStepProps) => {
   const [step, setStep] = useState(0);
   const [target, setTarget] = useState<HakaType>("romanian");
   const { walletAddress, isAuthenticated } = useAuth();
