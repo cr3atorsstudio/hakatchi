@@ -114,13 +114,7 @@ export const HomeMain = () => {
         <Header />
         <VStack gap={0} w="100%">
           {isAuthenticated && <GhostSummary />}
-          <GhostImage
-            hakaType={hakatchInfo.hakaType}
-            action={charaAction}
-            ghostType={hakatchInfo.ghostType}
-            cleanliness={hakatchInfo.state.cleanliness}
-            setCharaAction={setCharaAction}
-          />
+          <GhostImage action={charaAction} setCharaAction={setCharaAction} />
           {isAuthenticated && (
             <>
               <GhostAction setCharaAction={setCharaAction} />

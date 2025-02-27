@@ -1,22 +1,21 @@
+import { useGetGrave } from "@/hooks/useGetGrave";
+import { Grave } from "@/types";
 import { GhostAction, GhostType, HakaType } from "@/types/ghost";
 import { Container, Image, Flex } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 interface GhostImageProps {
-  hakaType: HakaType;
-  ghostType: GhostType;
   action: GhostAction;
   setCharaAction: Dispatch<SetStateAction<GhostAction>>;
-  cleanliness: number;
 }
 
-export const GhostImage = ({
-  hakaType,
-  ghostType,
-  action,
-  cleanliness,
-  setCharaAction,
-}: GhostImageProps) => {
+export const GhostImage = ({ action, setCharaAction }: GhostImageProps) => {
+  const { grave, error } = useGetGrave();
+  const hakaType = grave ? grave.location : "romanian";
+  const ghostType = grave ? grave.ghost_type : "romanian";
+  /** when dirtiness is 100, the background image is totally blackout */
+  const cleanliness = grave ? grave.dirtiness - 20 : 50;
+
   useEffect(() => {
     if (action === "eatingApple") {
       switch (ghostType) {
@@ -64,7 +63,7 @@ export const GhostImage = ({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: `rgba(0,0,0,${(100 - cleanliness) / 100})`,
+          backgroundColor: `rgba(0,0,0,${cleanliness / 100})`,
         }}
       >
         <Image
