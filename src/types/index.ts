@@ -8,6 +8,7 @@ export interface User {
 
 export interface Grave {
   id: string;
+  token_id: string;
   user_id: string;
   name: string;
   location: string;
