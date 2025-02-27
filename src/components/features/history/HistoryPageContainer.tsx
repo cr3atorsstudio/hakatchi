@@ -1,9 +1,11 @@
 "use client";
 
 import { Header } from "@/components/assets/Header";
-import { VStack, Text, Center, Box, Image } from "@chakra-ui/react";
+import { VStack, Text, Box, Image, Button } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 export const HistoryPageContainer = () => {
+  const router = useRouter();
   return (
     <VStack h="100vh" alignItems="center">
       <VStack
@@ -17,9 +19,11 @@ export const HistoryPageContainer = () => {
         color="#352B2B"
       >
         <Header />
-        <VStack>
+        <VStack mt="200px" alignItems="flex-start">
+          <Button px={2} mb={10} onClick={() => router.push("/")}>
+            Go Back
+          </Button>
           <VStack
-            mt="232px"
             opacity={1}
             bg="rgba(248, 248, 248, 1)"
             p={3}
