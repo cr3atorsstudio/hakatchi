@@ -1,6 +1,8 @@
 export class CelestiaClient {
   private nodeUrl: string;
   private authToken: string;
+  // Define namespace as a class property
+  private readonly namespace = "AAAAAAAAAAAAAAAAAAAAAAAAAAAASEFLYVRDSEU=";
 
   constructor(nodeUrl: string, authToken: string) {
     if (!nodeUrl || !authToken) {
@@ -20,9 +22,6 @@ export class CelestiaClient {
         data: JSON.stringify(data, null, 2),
       });
 
-      // Celestia の仕様に従い namespace を作成（Base64 エンコード）
-      const namespace = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMJ/xGlNMdE=";
-
       // Celestia に送信するデータの準備
       const payload = {
         id: 1,
@@ -31,7 +30,7 @@ export class CelestiaClient {
         params: [
           [
             {
-              namespace: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMJ/xGlNMdE=",
+              namespace: this.namespace,
               data: Buffer.from(JSON.stringify(data)).toString("base64"),
               share_version: 0,
               index: -1,
@@ -49,7 +48,10 @@ export class CelestiaClient {
         ],
       };
 
-      console.log("Request to Celestia:", { namespace, payload });
+      console.log("Request to Celestia:", {
+        namespace: this.namespace,
+        payload,
+      });
 
       // Celestia に JSON-RPC でリクエストを送信
       const response = await fetch(this.nodeUrl, {
@@ -80,16 +82,17 @@ export class CelestiaClient {
    */
   async getBlobData(height: number) {
     try {
-      const namespace = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMJ/xGlNMdE=";
-
-      console.log("Fetching data from Celestia with namespace:", namespace);
+      console.log(
+        "Fetching data from Celestia with namespace:",
+        this.namespace
+      );
 
       // Celestia に JSON-RPC でデータを取得
       const payload = {
         jsonrpc: "2.0",
         method: "blob.GetAll",
         id: 1,
-        params: [height, [namespace]],
+        params: [height, [this.namespace]],
       };
 
       const response = await fetch(this.nodeUrl, {
@@ -112,24 +115,6 @@ export class CelestiaClient {
       console.error("Error fetching blob from Celestia:", error);
       throw error;
     }
-  }
-
-  /**
-   * Celestia の仕様に従って namespace を作成する
-   */
-  private createNamespace(name: string): string {
-    const leadingZeros = new Uint8Array(18); // 先頭 18バイトのゼロ
-    const baseNamespace = Buffer.from(name, "utf-8"); // "HAKATCHI" をバイト配列にする
-    const padding = new Uint8Array(11 - baseNamespace.length); // 残りのゼロ埋め
-
-    // `namespace` を作成（18バイトのゼロ + "HAKATCHI" + ゼロ埋め）
-    const namespace = new Uint8Array(29);
-    namespace.set(leadingZeros, 0); // 先頭にゼロをセット
-    namespace.set(baseNamespace, 18); // "HAKATCHI" のバイトデータをセット
-    namespace.set(padding, 18 + baseNamespace.length); // ゼロ埋め
-
-    // Base64エンコード
-    return Buffer.from(namespace).toString("base64");
   }
 
   async healthCheck() {
