@@ -28,7 +28,7 @@ interface FirstStepProps {
 export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
   const [step, setStep] = useState(0);
   const [target, setTarget] = useState<HakaType>("romanian");
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
   const { setGraveId } = useGrave();
 
   const [isFollowing, setIsFollowing] = useState(true);
@@ -310,7 +310,7 @@ export const FirstStep = ({ setHakatchInfo, setFirst }: FirstStepProps) => {
             backgroundImage={"url(/button/button1.png)"}
             backgroundSize="contain"
             backgroundRepeat="no-repeat"
-            backgroundPosition={"center"}
+            backgroundPosition="center"
             onClick={async () => {
               try {
                 if (!walletAddress) {

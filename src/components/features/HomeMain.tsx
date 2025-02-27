@@ -15,13 +15,13 @@ import { GhostSummary } from "./Ghost/GhostSummary";
 import { WalletConnectContainer } from "./WalletConnectContainer";
 
 const INITIAL_HAKATCH_INFO: HakatchInfo = {
-  hakaType: "japanese",
-  ghostType: "purple",
+  hakaType: "romanian",
+  ghostType: "blue",
   name: null,
   age: 0,
   state: {
     energy: 100,
-    cleanliness: 100,
+    cleanliness: 50,
     mood: 50,
   },
 };
