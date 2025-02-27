@@ -88,7 +88,7 @@ export const HomeMain = () => {
   // Create a custom FirstStep component that will refresh data after completion
   const CustomFirstStep = () => (
     <FirstStep
-      setHakatchInfo={setHakatchInfo}
+      // setHakatchInfo={setHakatchInfo}
       setFirst={(value) => {
         setFirst(value);
         // If FirstStep is completed (value is false), refresh the data
@@ -113,24 +113,12 @@ export const HomeMain = () => {
       >
         <Header />
         <VStack gap={0} w="100%">
-          {isAuthenticated && (
-            <GhostSummary age={hakatchInfo.age} name={hakatchInfo.name} />
-          )}
-          <GhostImage
-            hakaType={hakatchInfo.hakaType}
-            action={charaAction}
-            ghostType={hakatchInfo.ghostType}
-            cleanliness={hakatchInfo.state.cleanliness}
-            setCharaAction={setCharaAction}
-          />
+          {isAuthenticated && <GhostSummary />}
+          <GhostImage action={charaAction} setCharaAction={setCharaAction} />
           {isAuthenticated && (
             <>
               <GhostAction setCharaAction={setCharaAction} />
-              <GhostOverview
-                energy={hakatchInfo.state.energy}
-                cleanliness={hakatchInfo.state.cleanliness}
-                mood={hakatchInfo.state.mood}
-              />
+              <GhostOverview />
             </>
           )}
         </VStack>

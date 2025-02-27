@@ -1,12 +1,7 @@
 import { useGetGrave } from "@/hooks/useGetGrave";
 import { Container, HStack, Text } from "@chakra-ui/react";
 
-interface GhostSummaryProps {
-  name: string | null;
-  age: number;
-}
-
-export const GhostSummary = ({ name, age }: GhostSummaryProps) => {
+export const GhostSummary = () => {
   const { grave, error } = useGetGrave();
 
   return error ? (
