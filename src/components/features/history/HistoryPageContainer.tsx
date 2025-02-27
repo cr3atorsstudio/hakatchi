@@ -31,7 +31,7 @@ export const HistoryPageContainer = () => {
             <Text>Stay tune!</Text>
           </VStack>
           <Box pos="absolute" bottom="200px">
-            <Image src="hakatch/green/default.gif" />
+            <Image src="hakatch/white/default.gif" />
           </Box>
         </VStack>
       </VStack>
