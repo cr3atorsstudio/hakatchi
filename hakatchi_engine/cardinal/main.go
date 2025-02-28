@@ -54,11 +54,12 @@ func MustInitWorld(w *cardinal.World) {
 		system.PlayerSpawnerSystem,
 		system.GraveSpawnerSystem,
 		system.FeedSystem,
-		system.DecaySystem,
+		system.GraveStatusDecaySystem,
 	))
 
 	Must(cardinal.RegisterInitSystems(w,
 		system.SpawnDefaultPlayersSystem,
+		system.SpawnDefaultGravesSystem,
 	))
 }
 

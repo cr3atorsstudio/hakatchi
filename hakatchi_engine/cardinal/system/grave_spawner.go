@@ -10,12 +10,6 @@ import (
 	"hakatchi_engine/msg"
 )
 
-const (
-	InitialEnergy      = 100
-	InitialCleanliness = 100
-	InitialMood        = 100
-)
-
 // GraveSpawnerSystem spawns graves based on `CreateGrave` transactions.
 func GraveSpawnerSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateGraveMsg, msg.CreateGraveResult](
@@ -39,6 +33,7 @@ func GraveSpawnerSystem(world cardinal.WorldContext) error {
 					Cleanliness: InitialCleanliness,
 					Mood:        InitialMood,
 					LastUpdated: time.Now().Unix(),
+					GraveId:     create.Msg.GraveId,
 				},
 			)
 			if err != nil {
@@ -51,6 +46,7 @@ func GraveSpawnerSystem(world cardinal.WorldContext) error {
 				"id":       id,
 				"token_id": create.Msg.TokenId,
 				"owner":    create.Msg.Owner,
+				"grave_id": create.Msg.GraveId,
 			})
 			if err != nil {
 				return msg.CreateGraveResult{}, err
