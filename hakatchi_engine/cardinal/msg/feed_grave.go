@@ -1,12 +1,11 @@
 package msg
 
 type FeedGraveMsg struct {
-	TokenId int `json:"token_id"`
+    GraveId string `json:"grave_id"`
 }
 
 type FeedGraveMsgReply struct {
-	Success     bool `json:"success"`
-	Energy      int  `json:"energy"`
-	Cleanliness int  `json:"cleanliness"`
-	Mood        int  `json:"mood"`
-} 
+    Success bool   `json:"success"`
+    Message string `json:"message,omitempty"`
+    Energy  int    `json:"energy,omitempty"`
+}
