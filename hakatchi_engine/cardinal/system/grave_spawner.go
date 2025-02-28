@@ -10,35 +10,37 @@ import (
 	"hakatchi_engine/msg"
 )
 
-const (
-	InitialEnergy      = 100
-	InitialCleanliness = 100
-	InitialMood        = 100
-)
-
 // GraveSpawnerSystem spawns graves based on `CreateGrave` transactions.
 func GraveSpawnerSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateGraveMsg, msg.CreateGraveResult](
 		world,
 		func(create cardinal.TxData[msg.CreateGraveMsg]) (msg.CreateGraveResult, error) {
-			// 既存のお墓を確認
-			exists, err := graveExists(world, create.Msg.TokenId)
-			if err != nil {
-				return msg.CreateGraveResult{}, fmt.Errorf("error checking grave existence: %w", err)
+			// TokenIdがnilの場合の処理
+			var tokenId int
+			if create.Msg.TokenId != nil {
+				tokenId = *create.Msg.TokenId
+				
+				// 既存のお墓を確認
+				exists, err := graveExists(world, tokenId)
+				if err != nil {
+					return msg.CreateGraveResult{}, fmt.Errorf("error checking grave existence: %w", err)
+				}
+				if exists {
+					return msg.CreateGraveResult{}, fmt.Errorf("grave with token ID %d already exists", tokenId)
+				}
 			}
-			if exists {
-				return msg.CreateGraveResult{}, fmt.Errorf("grave with token ID %d already exists", create.Msg.TokenId)
-			}
+
+
 
 			// 新しいお墓を作成
 			id, err := cardinal.Create(world,
 				comp.Grave{
-					TokenId:     create.Msg.TokenId,
-					Owner:       create.Msg.Owner,
+					TokenId:     tokenId,
 					Energy:      InitialEnergy,
 					Cleanliness: InitialCleanliness,
 					Mood:        InitialMood,
 					LastUpdated: time.Now().Unix(),
+					GraveId:     create.Msg.GraveId,
 				},
 			)
 			if err != nil {
@@ -49,8 +51,8 @@ func GraveSpawnerSystem(world cardinal.WorldContext) error {
 			err = world.EmitEvent(map[string]any{
 				"event":    "new_grave",
 				"id":       id,
-				"token_id": create.Msg.TokenId,
-				"owner":    create.Msg.Owner,
+				"token_id": tokenId,
+				"grave_id": create.Msg.GraveId,
 			})
 			if err != nil {
 				return msg.CreateGraveResult{}, err

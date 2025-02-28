@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"pkg.world.dev/world-engine/cardinal"
+	"pkg.world.dev/world-engine/cardinal/filter"
+	"pkg.world.dev/world-engine/cardinal/types"
 
 	comp "hakatchi_engine/component"
 )
@@ -16,6 +18,8 @@ func SpawnDefaultGravesSystem(world cardinal.WorldContext) error {
 	now := time.Now().Unix()
 
 	for i := 1; i <= 3; i++ {
+		graveId := fmt.Sprintf("default-grave-%d", i) // デフォルトのGrave ID
+		
 		_, err := cardinal.Create(world,
 			comp.Grave{
 				TokenId:     i,
@@ -24,6 +28,7 @@ func SpawnDefaultGravesSystem(world cardinal.WorldContext) error {
 				Cleanliness: InitialCleanliness,
 				Mood:        InitialMood,
 				LastUpdated: now,
+				GraveId:     graveId,
 			},
 		)
 		if err != nil {
@@ -31,4 +36,77 @@ func SpawnDefaultGravesSystem(world cardinal.WorldContext) error {
 		}
 	}
 	return nil
-} 
+}
+
+// GraveStatusDecaySystem decreases grave stats every 10 minutes:
+// -5 Energy, -3 Cleanliness, -1 Mood
+func GraveStatusDecaySystem(world cardinal.WorldContext) error {
+	now := time.Now().Unix()
+	
+	// デバッグ用ログ
+	fmt.Printf("Running GraveStatusDecaySystem at %d\n", now)
+	
+	return cardinal.NewSearch().Entity(
+		filter.Exact(filter.Component[comp.Grave]())).
+		Each(world, func(id types.EntityID) bool {
+			grave, err := cardinal.GetComponent[comp.Grave](world, id)
+			if err != nil {
+				fmt.Printf("Error getting grave component: %v\n", err)
+				return true
+			}
+			
+			// デバッグ用ログ
+			fmt.Printf("Checking grave %s (last updated: %d, now: %d, diff: %d)\n", 
+				id, grave.LastUpdated, now, now - grave.LastUpdated)
+			
+			// 最後の更新から10分経過したかチェック
+			if now - grave.LastUpdated >= UpdateInterval {
+				// ステータスを減少
+				oldEnergy := grave.Energy
+				oldCleanliness := grave.Cleanliness
+				oldMood := grave.Mood
+				
+				grave.Energy = max(0, grave.Energy - EnergyDecay)
+				grave.Cleanliness = max(0, grave.Cleanliness - CleanlinessDecay)
+				grave.Mood = max(0, grave.Mood - MoodDecay)
+				grave.LastUpdated = now
+				
+				// デバッグ用ログ
+				fmt.Printf("Updating grave %s: Energy %d->%d, Cleanliness %d->%d, Mood %d->%d\n",
+					id, oldEnergy, grave.Energy, oldCleanliness, grave.Cleanliness, oldMood, grave.Mood)
+				
+				// 変更をエンティティに反映
+				if err := cardinal.SetComponent[comp.Grave](world, id, grave); err != nil {
+					fmt.Printf("Error setting grave component: %v\n", err)
+					return true
+				}
+				
+				// イベント発行
+				err = world.EmitEvent(map[string]any{
+					"event":       "grave_status_decay",
+					"id":          id,
+					"token_id":    grave.TokenId,
+					"grave_id":    grave.GraveId,
+					"energy":      grave.Energy,
+					"cleanliness": grave.Cleanliness,
+					"mood":        grave.Mood,
+				})
+				if err != nil {
+					fmt.Printf("Error emitting event: %v\n", err)
+					return true
+				}
+							// Supabaseに直接更新リクエストを送信
+							updateData := map[string]interface{}{
+								"energy":      grave.Energy,
+								"cleanliness": grave.Cleanliness,
+								"mood":        grave.Mood,
+								"updated_at":  grave.LastUpdated,
+							}
+							
+							if err := updateSupabase(grave.GraveId, updateData); err != nil {
+								fmt.Printf("Error updating Supabase: %v\n", err)
+							}
+			}
+			return true
+		})
+}

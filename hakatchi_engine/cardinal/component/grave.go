@@ -7,6 +7,7 @@ type Grave struct {
 	Cleanliness int    `json:"cleanliness"` // 0-100（ゼロで真っ暗）
 	Mood        int    `json:"mood"`        // 0-100（ゼロで遊んでくれない）
 	LastUpdated int64  `json:"last_updated"`
+	GraveId     string `json:"grave_id"`    // Supabaseのgrave_id
 }
 
 func (Grave) Name() string {
