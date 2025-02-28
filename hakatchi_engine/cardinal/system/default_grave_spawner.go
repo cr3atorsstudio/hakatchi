@@ -43,7 +43,9 @@ func SpawnDefaultGravesSystem(world cardinal.WorldContext) error {
 func GraveStatusDecaySystem(world cardinal.WorldContext) error {
 	now := time.Now().Unix()
 	
-	// デバッグ用ログ	
+	// デバッグ用ログ
+	fmt.Printf("Running GraveStatusDecaySystem at %d\n", now)
+	
 	return cardinal.NewSearch().Entity(
 		filter.Exact(filter.Component[comp.Grave]())).
 		Each(world, func(id types.EntityID) bool {
@@ -53,7 +55,10 @@ func GraveStatusDecaySystem(world cardinal.WorldContext) error {
 				return true
 			}
 			
-		
+			// デバッグ用ログ
+			fmt.Printf("Checking grave %s (last updated: %d, now: %d, diff: %d)\n", 
+				id, grave.LastUpdated, now, now - grave.LastUpdated)
+			
 			// 最後の更新から10分経過したかチェック
 			if now - grave.LastUpdated >= UpdateInterval {
 				// ステータスを減少
@@ -90,6 +95,17 @@ func GraveStatusDecaySystem(world cardinal.WorldContext) error {
 					fmt.Printf("Error emitting event: %v\n", err)
 					return true
 				}
+							// Supabaseに直接更新リクエストを送信
+							updateData := map[string]interface{}{
+								"energy":      grave.Energy,
+								"cleanliness": grave.Cleanliness,
+								"mood":        grave.Mood,
+								"updated_at":  grave.LastUpdated,
+							}
+							
+							if err := updateSupabase(grave.GraveId, updateData); err != nil {
+								fmt.Printf("Error updating Supabase: %v\n", err)
+							}
 			}
 			return true
 		})

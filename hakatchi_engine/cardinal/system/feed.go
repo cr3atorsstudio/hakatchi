@@ -84,23 +84,37 @@ func FeedSystem(world cardinal.WorldContext) error {
 				}, err
 			}
 
+			// Supabaseに直接更新リクエストを送信
+			updateData := map[string]interface{}{
+				"energy":      graveComponent.Energy,
+				"cleanliness": graveComponent.Cleanliness,
+				"mood":        graveComponent.Mood,
+				"updated_at":  graveComponent.LastUpdated,
+			}
+
+			if err := updateSupabase(graveId, updateData); err != nil {
+				fmt.Printf("Error updating Supabase: %v\n", err)
+				// エラーがあっても処理は続行
+			}
+
 			// ペルソナが指定されていない場合はデフォルト値を使用
 			persona := "default" // デフォルトのペルソナ
 
 			// 変更をイベントとして発行
 			err = world.EmitEvent(map[string]any{
-				"event":       "grave_feed",
-				"id":          foundGraveId,
-				"grave_id":    graveId,
-				"food_type":   "default_food", // デフォルトの食べ物
-				"persona":     persona,
-				"energy":      EnergyIncrease,        // 増加量
-				"cleanliness": -CleanlinessDecrease,  // 減少量（負の値）
-				"mood":        MoodIncrease,          // 増加量
-				"energy_value":      graveComponent.Energy,      // 現在の値
-				"cleanliness_value": graveComponent.Cleanliness, // 現在の値
-				"mood_value":        graveComponent.Mood,        // 現在の値
-				"timestamp":   graveComponent.LastUpdated,
+				"event":             "grave_feed",
+				"id":                foundGraveId,
+				"grave_id":          graveId,
+				"food_type":         "default_food",
+				"persona":           persona,
+				"energy":            EnergyIncrease,
+				"cleanliness":       -CleanlinessDecrease,
+				"mood":              MoodIncrease,
+				"energy_value":      graveComponent.Energy,
+				"cleanliness_value": graveComponent.Cleanliness,
+				"mood_value":        graveComponent.Mood,
+				"timestamp":         graveComponent.LastUpdated,
+				"supabase_update":   true,  // Supabaseの更新が必要なことを示すフラグ
 			})
 			if err != nil {
 				return msg.FeedGraveMsgReply{
