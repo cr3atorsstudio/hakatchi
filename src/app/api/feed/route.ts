@@ -1,5 +1,6 @@
 import { celestiaClient } from "@/lib/celestia-client";
 import { supabase } from "@/lib/supabaseClient";
+import axios from "axios";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -85,25 +86,30 @@ export async function POST(request: Request) {
     }
 
     // Send data to Argus World Engine
-    //let txId: string | null = null;
-    //try {
-    //  //TODO: fix
-    //  const response = await axios.post(
-    //    `${process.env.ARGUS_API_URL}/api/updateGrave`,
-    //    {
-    //      grave_id,
-    //      action: "feeding",
-    //      food_quality,
-    //    }
-    //  );
+    let txId: string | null = null;
+    try {
+      const response = await axios.post(
+        `${process.env.ARGUS_API_URL}/tx/game/feed-grave`,
+        {
+          personaTag: "haka",
+          namespace: "defaultnamespace",
+          timestamp: Date.now(),
+          salt: Math.floor(Math.random() * 100000), // Generate a random salt
+          body: {
+            grave_id,
+          },
+        }
+      );
+      console.log("argus response:", response.data);
 
-    //  txId = response.data.tx_id || null;
-    //} catch (error: any) {
-    //  console.error(
-    //    "Failed to send data to Argus World Engine:",
-    //    error.message
-    //  );
-    //}
+      txId = response.data.TxHash || null;
+      console.log("txId:", txId);
+    } catch (error: any) {
+      console.error(
+        "Failed to send data to Argus World Engine:",
+        error.message
+      );
+    }
 
     //Save Celestia height and Argus transaction ID in Supabase
     const { error: logError, data: feedingLog } = await supabase
