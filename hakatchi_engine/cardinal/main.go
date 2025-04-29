@@ -49,7 +49,6 @@ func MustInitWorld(w *cardinal.World) {
 
 	// Register systems
 	Must(cardinal.RegisterSystems(w,
-		system.AttackSystem,
 		system.RegenSystem,
 		system.PlayerSpawnerSystem,
 		system.GraveSpawnerSystem,
