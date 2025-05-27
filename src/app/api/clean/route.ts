@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     const cleanLog = {
       action: "CLEAN",
       grave_id,
-      timestamp: Date.now(),
+      timestamp: Math.floor(Date.now() / 1000),
       actionDetails: {
         effort_level,
         description: `Cleaning grave #${grave_id} with effort level ${effort_level}`,

@@ -31,6 +31,7 @@ export async function GET(request: Request) {
         .single();
 
       if (insertError) {
+        console.log(insertError);
         return NextResponse.json(
           { error: insertError.message },
           { status: 500 }
@@ -60,6 +61,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ ...updatedUser, graves: graves || [] });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
