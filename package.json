@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^3.8.0",
+    "@cosmjs/amino": "^0.33.1",
+    "@cosmjs/crypto": "^0.33.1",
+    "@cosmjs/proto-signing": "^0.33.1",
+    "@cosmjs/stargate": "^0.33.1",
     "@emotion/react": "^11.14.0",
     "@privy-io/react-auth": "^2.4.5",
     "@rainbow-me/rainbowkit": "^2.2.4",

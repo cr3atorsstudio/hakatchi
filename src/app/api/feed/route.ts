@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     // Get current hunger value from the database
     const { data: grave, error: graveError } = await supabase
       .from("graves")
-      .select("hunger")
+      .select("hunger, token_id")
       .eq("id", grave_id)
       .single();
 
@@ -35,6 +35,23 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // まず、Argus World Engineに墓を作成するリクエストを送信
+    //let createGraveTxId: string | null = null;
+    //const createResponse = await axios.post(
+    //  `${process.env.ARGUS_API_URL}/tx/game/create-grave`,
+    //  {
+    //    personaTag: "haka",
+    //    namespace: "defaultnamespace",
+    //    salt: 12345,
+    //    body: {
+    //      grave_id,
+    //      token_id: grave.token_id || 0,
+    //    },
+    //  }
+    //);
+    //console.log("createResponse:", createResponse.data);
+    //createGraveTxId = createResponse.data.TxHash || null;
 
     // Calculate new hunger value (ensure it doesn't go below 0)
     const hungerReduction = food_quality;
@@ -77,36 +94,35 @@ export async function POST(request: Request) {
 
     try {
       const celestiaResponse = await celestiaClient.submitBlob(feedLog);
-      celestiaHeight = celestiaResponse?.result || null;
-      celestiaSuccess = celestiaHeight !== null;
+      celestiaHeight = celestiaResponse.height;
+      celestiaSuccess = celestiaResponse.success;
       console.log("Celestia response:", celestiaResponse);
     } catch (celestiaError: any) {
       console.error("Celestia error:", celestiaError.message);
       // Continue execution even if Celestia fails
     }
 
-    // Send data to Argus World Engine
-    let txId: string | null = null;
+    // Send data to Argus World Engine for feeding
+    let feedTxId: string | null = null;
     try {
       const response = await axios.post(
         `${process.env.ARGUS_API_URL}/tx/game/feed-grave`,
         {
           personaTag: "haka",
           namespace: "defaultnamespace",
-          timestamp: Date.now(),
-          salt: Math.floor(Math.random() * 100000), // Generate a random salt
+          salt: Math.floor(Math.random() * 100000),
           body: {
             grave_id,
           },
         }
       );
-      console.log("argus response:", response.data);
+      console.log("argus feed response:", response.data);
 
-      txId = response.data.TxHash || null;
-      console.log("txId:", txId);
+      feedTxId = response.data.TxHash || null;
+      console.log("feedTxId:", feedTxId);
     } catch (error: any) {
       console.error(
-        "Failed to send data to Argus World Engine:",
+        "Failed to send feeding data to Argus World Engine:",
         error.message
       );
     }
@@ -121,6 +137,7 @@ export async function POST(request: Request) {
           food_quality,
           fed_at: new Date().toISOString(),
           celestia_height: celestiaHeight,
+          feed_tx_id: feedTxId || null,
         },
       ])
       .select()
@@ -139,6 +156,7 @@ export async function POST(request: Request) {
       hungerReduction,
       celestiaSuccess,
       feedingLog: feedingLog || null,
+      feedTxId,
     });
   } catch (error: any) {
     console.error("Feed error:", error);
