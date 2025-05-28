@@ -1,5 +1,5 @@
+import { celestiaClient } from "@/lib/celestia-client";
 import { Grave } from "../entities/Grave";
-import { submitToBlockchain } from "../utils/celestia";
 import { World } from "../world";
 
 export class FeedSystem {
@@ -67,7 +67,7 @@ export class FeedSystem {
     grave: Grave,
     changes: { energy: number; cleanliness: number; mood: number }
   ): void {
-    submitToBlockchain({
+    celestiaClient.submitBlob({
       action: "feed",
       tokenId: grave.tokenId,
       timestamp: Date.now(),

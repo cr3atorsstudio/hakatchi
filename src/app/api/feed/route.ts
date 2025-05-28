@@ -37,21 +37,21 @@ export async function POST(request: Request) {
     }
 
     // まず、Argus World Engineに墓を作成するリクエストを送信
-    let createGraveTxId: string | null = null;
-    const createResponse = await axios.post(
-      "https://argus-hakatchi.cardinal.us-west-2.argus-dev.com/tx/game/create-grave",
-      {
-        personaTag: "haka",
-        namespace: "defaultnamespace",
-        salt: 12345,
-        body: {
-          grave_id,
-          token_id: grave.token_id || 0,
-        },
-      }
-    );
-    console.log("createResponse:", createResponse.data);
-    createGraveTxId = createResponse.data.TxHash || null;
+    //let createGraveTxId: string | null = null;
+    //const createResponse = await axios.post(
+    //  `${process.env.ARGUS_API_URL}/tx/game/create-grave`,
+    //  {
+    //    personaTag: "haka",
+    //    namespace: "defaultnamespace",
+    //    salt: 12345,
+    //    body: {
+    //      grave_id,
+    //      token_id: grave.token_id || 0,
+    //    },
+    //  }
+    //);
+    //console.log("createResponse:", createResponse.data);
+    //createGraveTxId = createResponse.data.TxHash || null;
 
     // Calculate new hunger value (ensure it doesn't go below 0)
     const hungerReduction = food_quality;
@@ -94,8 +94,8 @@ export async function POST(request: Request) {
 
     try {
       const celestiaResponse = await celestiaClient.submitBlob(feedLog);
-      celestiaHeight = celestiaResponse?.result || null;
-      celestiaSuccess = celestiaHeight !== null;
+      celestiaHeight = celestiaResponse.height;
+      celestiaSuccess = celestiaResponse.success;
       console.log("Celestia response:", celestiaResponse);
     } catch (celestiaError: any) {
       console.error("Celestia error:", celestiaError.message);
@@ -110,7 +110,6 @@ export async function POST(request: Request) {
         {
           personaTag: "haka",
           namespace: "defaultnamespace",
-          timestamp: Math.floor(Date.now() / 1000),
           salt: Math.floor(Math.random() * 100000),
           body: {
             grave_id,
@@ -138,8 +137,7 @@ export async function POST(request: Request) {
           food_quality,
           fed_at: new Date().toISOString(),
           celestia_height: celestiaHeight,
-          create_grave_tx_id: createGraveTxId,
-          feed_tx_id: feedTxId,
+          feed_tx_id: feedTxId || null,
         },
       ])
       .select()
@@ -158,7 +156,6 @@ export async function POST(request: Request) {
       hungerReduction,
       celestiaSuccess,
       feedingLog: feedingLog || null,
-      createGraveTxId,
       feedTxId,
     });
   } catch (error: any) {
