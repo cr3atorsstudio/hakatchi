@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HAKATCHI 🪦  
+**An On-Chain Tamagotchi Where You Take Care of a Digital Grave**  
 
-## Getting Started
+🔗 **Live App:** [hakatchi.vercel.app](https://hakatchi.vercel.app/)  
+🔗 **Smart Contract:** [Arbiscan](https://arbiscan.io/address/0x09F480718ED735f8A1A6a7b3fea186f54e40B2ac)  
+🔗 **NFT Collection:** [OpenSea](https://opensea.io/collection/hakatchi)  
+🔗 **Celestia Action Logs:** [Celenium Explorer](https://mocha-4.celenium.io/namespace/000000000000000000000000000000000000000048414b6154434845?tab=Blobs)  
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## **Overview**  
+
+**HAKATCHI** is a **fully on-chain Tamagotchi-like grave-caring game** where each **grave** has stats that change in real-time:  
+
+- 🟢 **Energy** – Depletes if not fed  
+- 🫧 **Cleanliness** – Gets dirty over time  
+- 💛 **Affection** – Drops if neglected  
+
+Your grave **interacts with other graves in the world**, affecting each other's states in real-time.  
+
+---
+
+## **How It Works**  
+
+| Action      | Effect  |
+|------------|---------|
+| 🍚 **Feed** | +20 Energy, -5 Cleanliness, +3 Affection |
+| 🧹 **Clean** | +20 Cleanliness |
+| 🎭 **Play** | -10 Energy, -10 Cleanliness, +10 Affection |
+| ⏳ **Time Decay** | -5 Energy, -3 Cleanliness, -1 Affection per cycle |
+| 🪦 **Grave-to-Grave Interactions** | Nearby graves **influence each other** in real-time |
+
+---
+
+## **Architecture**  
+
+The diagram below illustrates how **Next.js, Argus World Engine, EVM (Arbitrum), and Celestia** interact:  
+ ![hakatchi-2025-02-27-053942](https://github.com/user-attachments/assets/0dcaca1f-418d-4320-91ea-7e9570c3a17b)
+
+
+### **Key Features**
+- **Next.js App**: User interacts with their grave through a web-based interface.  
+- **Argus World Engine**:  
+  - **Houses all mutable grave states** (Energy, Cleanliness, Affection).  
+  - **Graves interact with each other** in real-time (one grave’s state can affect others nearby).  
+- **EVM (Arbitrum)**: Handles **NFT ownership and smart contract-based interactions**.  
+- **Celestia**: Stores **all grave action logs**, which can be used by **other apps, not just HAKATCHI**.  
+
+---
+
+## **Folder Structure**  
+
+```
+hakatchi/
+│── contracts/          # Contains Solidity smart contracts
+│── hakatchi_engine/    # Contains Argus World Engine game logic
+│── frontend/           # Next.js-based web app
+│── scripts/            # Deployment and testing scripts
+│── README.md           # This file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## **Gameplay Demo**  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+TODO: demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Image board
+![image](https://github.com/user-attachments/assets/be0f2b7b-3586-4153-a87b-4f45ae5589b9)
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **License & Contributions**  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+📜 **MIT License** – Open-source, free to use  
+💡 **Want to contribute?** Fork, improve, and submit a PR! 🚀  
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

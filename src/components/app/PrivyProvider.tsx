@@ -16,7 +16,7 @@ export const PrivyProvider = ({ children }: ProviderProps) => {
         appearance: {
           theme: "light",
           accentColor: "#676FFF",
-          logo: "https://hakatchi.mochimochi.dev/logo.png",
+          logo: "https://hakatchi.vercel.app/logo.png",
         },
         // Create embedded wallets for users who don't have a wallet
         embeddedWallets: {
